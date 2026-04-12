@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PetCare Vet: veterinaria premium, consultas, planes y citas. Oferta primera consulta.">
+  <title>PetCare Vet | Veterinaria premium</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800;900&family=Montserrat:wght@800;900&display=swap');
+
+    :root {
+      --primary: #16A34A;
+      --dark: #0a1f0e;
+      --accent: #DCFCE7;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.6);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A855F7;
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168, 85, 247, 0.6) rgba(0, 0, 0, 0.2);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      height: auto;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+      height: auto;
+      min-height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      max-width: 390px;
+      margin: 0 auto;
+      font-family: 'Inter', system-ui, sans-serif;
+      text-align: center;
+      color: #fff;
+      background: var(--dark);
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    h1, h2 {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-weight: 900;
+      line-height: 1.1;
+      margin: 0 0 0.65rem;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    section {
+      border-top: 3px solid var(--primary);
+    }
+
+    section:first-of-type {
+      border-top: none;
+    }
+
+    .top-urgency {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      padding: 10px 12px;
+      animation: urgency-pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes urgency-pulse {
+      0%, 100% { opacity: 1; box-shadow: inset 0 0 0 0 rgba(0,0,0,0); }
+      50% { opacity: 0.95; box-shadow: inset 0 -3px 0 rgba(255,255,255,0.35); }
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,31,14,0) 40%, #0a1f0e 100%);
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 1.25rem 14px 1rem;
+      text-align: center;
+    }
+
+    .hero-copy h1 {
+      color: #fff;
+      font-size: 2rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    }
+
+    .hero-sub {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0 0 1rem;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 0 1.35rem;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      width: 100%;
+      max-width: 340px;
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.45);
+    }
+
+    .btn-hero {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .hero-pad {
+      padding: 0 14px 1rem;
+      position: relative;
+      margin-top: -4px;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 14px 10px;
+    }
+
+    .stats-row span {
+      white-space: nowrap;
+    }
+
+    .pain {
+      background: var(--dark);
+      padding: 1.6rem 14px 1.75rem;
+    }
+
+    .pain h2 {
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 1.1rem;
+    }
+
+    .problem-card {
+      background: rgba(255,255,255,0.06);
+      border: 3px solid #EF4444;
+      border-radius: 12px;
+      padding: 1rem 12px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .problem-card:hover {
+      animation: subtle-shake 0.45s ease;
+    }
+
+    @keyframes subtle-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    .solution-card {
+      background: var(--primary);
+      border: none;
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-top: 1rem;
+      padding: 1.25rem 14px;
+    }
+
+    .servicios {
+      background: var(--primary);
+      padding: 1.6rem 12px 1.75rem;
+    }
+
+    .servicios h2 {
+      color: #fff;
+      font-size: 1.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .serv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .serv-card {
+      background: #fff;
+      color: #14532d;
+      border-radius: 12px;
+      padding: 14px 10px;
+      font-weight: 700;
+    }
+
+    .serv-card .emoji {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .serv-card .price {
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 1.05rem;
+      margin-top: 8px;
+    }
+
+    .img-band-wrap {
+      position: relative;
+      text-align: center;
+    }
+
+    .img-band {
+      height: 300px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .img-band-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(22, 163, 74, 0.88);
+      color: #fff;
+      font-weight: 900;
+      font-size: 0.9rem;
+      padding: 12px 10px;
+    }
+
+    .precios {
+      background: var(--dark);
+      padding: 1.6rem 12px 1.75rem;
+    }
+
+    .precios h2 {
+      font-size: 1.9rem;
+      color: #fff;
+      margin-bottom: 1.1rem;
+    }
+
+    .plan {
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.2rem 14px 1.3rem;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .plan.popular {
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 0 2px rgba(22,163,74,0.3), 0 0 28px rgba(22, 163, 74, 0.5);
+    }
+
+    .badge-pop {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .precio-old {
+      text-decoration: line-through;
+      color: #F87171;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .precio-new {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .plan .btn {
+      margin-top: 12px;
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4);
+    }
+
+    .cta-final {
+      background: var(--primary);
+      padding: 1.85rem 14px 2rem;
+    }
+
+    .cta-final h2 {
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .countdown-deco {
+      font-weight: 800;
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin: 0.75rem 0 1rem;
+    }
+
+    .countdown-fake {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 1rem;
+      font-family: 'Montserrat', monospace;
+      font-weight: 900;
+      font-size: 1.4rem;
+    }
+
+    .countdown-fake span {
+      background: rgba(0,0,0,0.25);
+      padding: 8px 10px;
+      border-radius: 8px;
+      min-width: 2.2rem;
+      animation: tick 2s ease-in-out infinite;
+    }
+
+    .countdown-fake span:nth-child(2) { animation-delay: 0.2s; }
+    .countdown-fake span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes tick {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.75; transform: scale(0.96); }
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+  </style>
+  <meta name="viewport" content="width=390, initial-scale=1.0">
+</head>
+<body>
+
+  <div class="top-urgency">🚨 OFERTA LIMITADA: 20% OFF EN TU PRIMERA CONSULTA 🚨</div>
+
+  <section class="hero">
+    <img class="hero-img" src="../assets/img/Veterinario%20feliz%20con%20mascotas%20en%20cl%C3%ADnica.png" alt="Veterinario con mascotas en clínica" width="390" height="380">
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <h1>TU MASCOTA MERECE LO MEJOR</h1>
+      <p class="hero-sub">Atención veterinaria premium al mejor precio</p>
+    </div>
+  </section>
+  <div class="hero-pad">
+    <button type="button" class="btn btn-hero">📅 AGENDAR CITA AHORA →</button>
+  </div>
+  <div class="stats-row">
+    <span>🐕 +2.000 pacientes</span>
+    <span>⭐ 4.9/5</span>
+    <span>🏥 10 años</span>
+  </div>
+
+  <section class="pain">
+    <h2>¿Tu mascota sufre y tú no sabes qué hacer? 😢</h2>
+    <div class="problem-card">😣 Dolores que ignoras hasta que empeoran</div>
+    <div class="problem-card">💸 Consultas caras sin explicación clara</div>
+    <div class="problem-card">⏰ Esperas eternas y trato frío</div>
+    <div class="solution-card problem-card">¡NOSOTROS TENEMOS LA SOLUCIÓN! ✅</div>
+  </section>
+
+  <section class="servicios">
+    <h2>TODO LO QUE TU MASCOTA NECESITA</h2>
+    <div class="serv-grid">
+      <div class="serv-card">
+        <div class="emoji">💉</div>
+        <strong>Vacunación</strong>
+        <div class="price">Desde $45.000</div>
+      </div>
+      <div class="serv-card">
+        <div class="emoji">🦷</div>
+        <strong>Dental</strong>
+        <div class="price">Desde $89.000</div>
+      </div>
+      <div class="serv-card">
+        <div class="emoji">🔬</div>
+        <strong>Laboratorio</strong>
+        <div class="price">Desde $65.000</div>
+      </div>
+      <div class="serv-card">
+        <div class="emoji">🏥</div>
+        <strong>Urgencias</strong>
+        <div class="price">24/7</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="img-band-wrap">
+    <img class="img-band" src="../assets/img/Cachorro%20de%20retriever%20en%20revisi%C3%B3n%20m%C3%A9dica.png" alt="Cachorro en revisión médica" width="390" height="300">
+    <div class="img-band-bar">⭐⭐⭐⭐⭐ MÁS DE 2.000 FAMILIAS NOS ELIGEN</div>
+  </section>
+
+  <section class="precios">
+    <h2>ELIGE EL PLAN PERFECTO PARA TU MASCOTA 🐾</h2>
+    <div class="plan">
+      <div class="precio-old">$120.000</div>
+      <div class="precio-new">$95.000</div>
+      <p style="margin:8px 0 0;font-weight:700;">Consulta general</p>
+      <button type="button" class="btn">QUIERO ESTE PLAN</button>
+    </div>
+    <div class="plan popular">
+      <span class="badge-pop">⭐ EL MÁS ELEGIDO</span>
+      <div class="precio-old">$280.000</div>
+      <div class="precio-new">$199.000</div>
+      <p style="margin:8px 0 0;font-weight:700;">Plan anual + descuentos</p>
+      <button type="button" class="btn">¡LO QUIERO!</button>
+    </div>
+    <div class="plan">
+      <div class="precio-old">$450.000</div>
+      <div class="precio-new">$349.000</div>
+      <p style="margin:8px 0 0;font-weight:700;">Premium familia (3 mascotas)</p>
+      <button type="button" class="btn">RESERVAR</button>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <h2>¡AGENDA HOY Y AHORRA 20%! ⏰</h2>
+    <p class="countdown-deco">OFERTA VÁLIDA POR TIEMPO LIMITADO</p>
+    <div class="countdown-fake" aria-hidden="true">
+      <span>04</span><span>12</span><span>33</span>
+    </div>
+    <button type="button" class="btn btn-white">📅 AGENDAR CON DESCUENTO</button>
+  </section>
+
+</body>
+</html>
