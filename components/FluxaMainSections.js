@@ -89,18 +89,12 @@ const PLAN_TRABAJO_FLUXA_SYSTEM = [
     tagline: 'Instalación técnica del sistema',
     alcance: [
       'Landing page de captación (diseño + copy + desarrollo)',
-      'Automatización WhatsApp con n8n (5-8 flujos automáticos activos)',
-      'CRM configurado según necesidad del negocio',
-      'Setup de cuenta Meta Ads estructurado y listo (Alejandro)',
-      'Dashboard de métricas en Google Sheets',
+      'Setup de cuenta Meta Ads estructurado y listo',
       'Capacitación al cliente en el sistema instalado',
     ],
     entregables: [
       'Landing page activa y publicada',
-      'Flujos de WhatsApp automáticos funcionando',
-      'CRM configurado con pipeline de prospectos',
-      'Cuenta publicitaria estructurada (Alejandro)',
-      'Dashboard de métricas listo para usar',
+      'Cuenta publicitaria estructurada',
       'Grabación de sesión de capacitación',
     ],
   },
@@ -163,9 +157,9 @@ const PLAN_TRABAJO_FLUXA_SCALE = [
     tagline: 'Instalación técnica del sistema',
     alcance: [
       'Landing page de captación (diseño + copy + desarrollo)',
-      'Automatización WhatsApp con n8n (5-8 flujos automáticos activos)',
+      'Automatización WhatsApp (5-8 flujos automáticos activos)',
       'CRM configurado según necesidad del negocio',
-      'Setup de cuenta Meta Ads estructurado y listo (Alejandro)',
+      'Setup de cuenta Meta Ads estructurado y listo',
       'Dashboard de métricas en Google Sheets',
       'Capacitación al cliente en el sistema instalado',
     ],
@@ -173,7 +167,7 @@ const PLAN_TRABAJO_FLUXA_SCALE = [
       'Landing page activa y publicada',
       'Flujos de WhatsApp automáticos funcionando',
       'CRM configurado con pipeline de prospectos',
-      'Cuenta publicitaria estructurada (Alejandro)',
+      'Cuenta publicitaria estructurada',
       'Dashboard de métricas listo para usar',
       'Grabación de sesión de capacitación',
     ],
@@ -187,8 +181,8 @@ const PLAN_TRABAJO_FLUXA_SCALE = [
     alcance: [
       'Landing page profesional con VSL integrado (guión + dirección + edición)',
       'Embudo de conversión digital multi-etapa',
-      'Automatización avanzada WhatsApp + n8n (flujos completos + post-venta)',
-      'Gestión y optimización de campañas Meta Ads (Alejandro)',
+      'Automatización avanzada WhatsApp (flujos completos + post-venta)',
+      'Gestión y optimización de campañas Meta Ads',
       'Sistema UGC completo: 5-10 creadoras activas coordinadas',
       'Capacitación en ventas por WhatsApp y TikTok Live',
     ],
@@ -196,7 +190,7 @@ const PLAN_TRABAJO_FLUXA_SCALE = [
       'VSL grabada, editada y publicada',
       'Embudo multi-etapa activo y midiendo',
       'Flujos avanzados de automatización post-venta',
-      'Campañas Meta Ads activas y optimizadas con Alejandro',
+      'Campañas Meta Ads activas y optimizadas',
       'Kit comercial: scripts, respuestas rápidas, portafolio digital',
       'Protocolo de ventas por 5 fases documentado',
     ],
@@ -529,7 +523,7 @@ export default function FluxaMainSections() {
                 <strong>$297 USD</strong>
               </p>
               <p className="pricing__period">Pago único · Entrega en 1 semana</p>
-              <p className="pricing__cop">≈ $1.188.000 COP</p>
+
               <ul className="pricing__list">
                 <li>Diagnóstico estratégico del negocio (sesión 90 min)</li>
                 <li>Definición de cliente ideal (ICP documentado)</li>
@@ -564,19 +558,16 @@ export default function FluxaMainSections() {
                 clientes.
               </p>
               <p className="pricing__price">
-                <strong>$650 USD</strong>
+                <strong>$697 USD</strong>
               </p>
               <p className="pricing__period">mes 1 (instalación) + $350 USD/mes × 2 meses</p>
-              <p className="pricing__cop">≈ $5.400.000 COP total · Done With You</p>
+
               <ul className="pricing__list">
                 <li>Todo lo de Fluxa Start ejecutado (no solo documentado)</li>
                 <li>Landing page de captación (diseño + copy + desarrollo)</li>
-                <li>Automatización WhatsApp con n8n (5-8 flujos activos)</li>
-                <li>CRM configurado según necesidad del negocio</li>
                 <li>Estrategia de contenido 60 días con dirección mensual</li>
                 <li>Sistema UGC básico: 3-5 creadoras + briefs</li>
                 <li>Setup cuenta Meta Ads estructurado y listo</li>
-                <li>Dashboard de métricas en Google Sheets</li>
                 <li>2 sesiones estratégicas mensuales</li>
                 <li>Soporte WhatsApp días hábiles</li>
               </ul>
@@ -602,17 +593,17 @@ export default function FluxaMainSections() {
                 digital.
               </p>
               <p className="pricing__price">
-                <strong>$1.100 USD</strong>
+                <strong>$1.597 USD</strong>
               </p>
               <p className="pricing__period">mes 1 (instalación completa) + $497 USD/mes × 2 meses</p>
-              <p className="pricing__cop">≈ $8.376.000 COP total · Done For You</p>
+
               <ul className="pricing__list">
                 <li>Todo lo de Fluxa System a mayor escala</li>
                 <li>Landing page profesional + VSL integrado</li>
                 <li>Embudo de conversión digital multi-etapa</li>
-                <li>Automatización avanzada WhatsApp + n8n (flujos completos + post-venta)</li>
+                <li>Automatización avanzada WhatsApp (flujos completos + post-venta)</li>
                 <li>Sistema UGC completo: 5-10 creadoras activas</li>
-                <li>Gestión y optimización de campañas Meta Ads (Alejandro)</li>
+                <li>Gestión y optimización de campañas Meta Ads</li>
                 <li>CRM o sistema personalizado según necesidad</li>
                 <li>Ecommerce o membresía instalada (si aplica)</li>
                 <li>Dashboard de KPIs completo + integraciones</li>

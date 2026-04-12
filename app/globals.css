@@ -5480,15 +5480,7 @@ h1, h2, h3 {
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
   color: #64748b;
-  margin: 4px 0 6px;
-}
-
-.pricing__cop {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  color: #a855f7;
-  font-weight: 600;
-  margin-bottom: 20px;
+  margin: 4px 0 20px;
 }
 
 .pricing__price-sub {
