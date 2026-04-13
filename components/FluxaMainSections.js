@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import FluxaSystemArchitecture from '@/components/FluxaSystemArchitecture';
 import { FLUXA_WHATSAPP_HREF } from '@/lib/whatsapp';
 
@@ -232,6 +233,81 @@ const PLAN_MODAL_LABELS = {
   scale: 'FLUXA SCALE',
 };
 
+const FLUXA_INSTALLER_STATS = [
+  { num: '+50', label: 'Negocios y marcas acompañadas' },
+  { num: '4', label: 'Disciplinas en un equipo (contenido, pauta, landings, sistemas)' },
+  { num: '24h', label: 'Respuesta máxima en horario hábil' },
+];
+
+const FLUXA_TESTIMONIALS = [
+  {
+    id: 'ti-screen1',
+    kind: 'image',
+    imageSrc: '/testimonios/testomonio1.jpeg',
+    imageAlt: 'Testimonio real de cliente Fluxa (captura 1)',
+  },
+  {
+    id: 'ti-screen2',
+    kind: 'image',
+    imageSrc: '/testimonios/testimonio%202.jpeg',
+    imageAlt: 'Testimonio real de cliente Fluxa (captura 2)',
+  },
+  {
+    id: 't1',
+    quote:
+      'Antes gastábamos en pauta sin saber si funcionaba. Con Fluxa cada inversión tiene objetivo, creativos alineados y métricas que sí leemos.',
+    initials: 'RP',
+    name: 'Ricardo P.',
+    role: 'E-commerce · Retail + online',
+    avatarClass: 'fluxa-social-proof__avatar--a',
+  },
+  {
+    id: 't2',
+    quote:
+      'Ya había pagado consultorías que solo dejaron PDFs. Fluxa fue distinto: salimos con calendario, landing y seguimiento real. Ejecución, no teoría.',
+    initials: 'DB',
+    name: 'David Botero',
+    role: 'Servicios profesionales · Consultoría',
+    avatarClass: 'fluxa-social-proof__avatar--b',
+  },
+  {
+    id: 't3',
+    quote:
+      'Pasamos de vender solo por WhatsApp sin proceso a tener respuestas claras y seguimiento ordenado. El equipo cerraba más sin estar pegados al teléfono.',
+    initials: 'CM',
+    name: 'Carlos M.',
+    role: 'Tecnología · B2B',
+    avatarClass: 'fluxa-social-proof__avatar--c',
+  },
+  {
+    id: 't4',
+    quote:
+      'Tenía redes activas y pocas ventas. Fluxa nos mostró que el problema no era publicar más, sino publicar con sistema. Al mes ya había pedidos nuevos.',
+    initials: 'LM',
+    name: 'Laura M.',
+    role: 'Marca personal · Consultora',
+    avatarClass: 'fluxa-social-proof__avatar--d',
+  },
+  {
+    id: 't5',
+    quote:
+      'Lo mejor es que todo queda documentado: plantillas, calendario y entregables claros. No dependemos de reuniones eternas para saber qué toca.',
+    initials: 'JR',
+    name: 'Julián R.',
+    role: 'Agencia creativa · Escalamiento',
+    avatarClass: 'fluxa-social-proof__avatar--e',
+  },
+  {
+    id: 't6',
+    quote:
+      'Llevábamos la tienda online estancada. Fluxa alineó tráfico, oferta y mensajes. Este trimestre superamos lo que hacíamos en semestres anteriores.',
+    initials: 'FG',
+    name: 'Felipe G.',
+    role: 'E-commerce · Moda',
+    avatarClass: 'fluxa-social-proof__avatar--f',
+  },
+];
+
 function FluxaWeekOsArticle({ w }) {
   return (
     <article className={`fluxa-week-os fluxa-week-os--${w.theme} card card--glass`}>
@@ -258,8 +334,62 @@ function FluxaWeekOsArticle({ w }) {
   );
 }
 
+/** Intervalo del carrusel de testimonios (ms). */
+const TESTIMONIAL_AUTOPLAY_MS = 3500;
+
 export default function FluxaMainSections() {
   const [planModalTier, setPlanModalTier] = useState(null);
+  const [testimonialPageSize, setTestimonialPageSize] = useState(3);
+  const [testimonialPage, setTestimonialPage] = useState(0);
+  const testimonialAutoplayPausedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    var mq = window.matchMedia('(min-width: 768px)');
+    var apply = function () {
+      setTestimonialPageSize(mq.matches ? 3 : 1);
+    };
+    apply();
+    mq.addEventListener('change', apply);
+    return function () {
+      mq.removeEventListener('change', apply);
+    };
+  }, []);
+
+  var testimonialPages = Math.max(1, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize));
+  var safeTestimonialPage = Math.min(testimonialPage, testimonialPages - 1);
+  var testimonialSlice = FLUXA_TESTIMONIALS.slice(
+    safeTestimonialPage * testimonialPageSize,
+    safeTestimonialPage * testimonialPageSize + testimonialPageSize
+  );
+
+  useEffect(() => {
+    setTestimonialPage(function (p) {
+      return Math.min(p, Math.max(0, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize) - 1));
+    });
+  }, [testimonialPageSize]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    var pages = Math.max(1, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize));
+    if (pages <= 1) return undefined;
+
+    var id = window.setInterval(function () {
+      if (testimonialAutoplayPausedRef.current) return;
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      setTestimonialPage(function (p) {
+        var curPages = Math.max(1, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize));
+        var cur = Math.min(p, curPages - 1);
+        return (cur + 1) % curPages;
+      });
+    }, TESTIMONIAL_AUTOPLAY_MS);
+
+    return function () {
+      window.clearInterval(id);
+    };
+  }, [testimonialPageSize]);
 
   useEffect(() => {
     if (!planModalTier) return;
@@ -433,73 +563,131 @@ export default function FluxaMainSections() {
 
       <section className="section section--reveal section--testimonials" id="testimonios">
         <div className="container">
-          <h2 className="section__title">Lo que dicen quienes ya tienen su sistema</h2>
-          <div className="testimonial-featured card card--glass testimonial-featured--hero">
-            <div className="testimonial-featured__avatar" aria-hidden="true">
-              CM
-            </div>
-            <div className="testimonial-featured__stars" aria-hidden="true">
-              ★★★★★
-            </div>
-            <p className="testimonial-featured__tag">Case · E-commerce · Suplementos · Medellín</p>
-            <blockquote className="testimonial-featured__quote">
-              «Llevaba 2 años publicando en Instagram sin resultados. En el primer mes con Fluxa ya tenía mi landing, mi
-              calendario y mis primeras ventas desde pauta. Por fin siento que tengo un equipo que entiende mi negocio.»
+          <div className="fluxa-social-proof">
+            <p className="fluxa-social-proof__eyebrow">¿Quién instala el sistema?</p>
+            <h2 className="fluxa-social-proof__headline">
+              Fluxa no solo asesora — <span className="fluxa-social-proof__headline-accent">ejecuta</span>.
+            </h2>
+            <blockquote className="fluxa-social-proof__manifesto">
+              <p>
+                Día a día aplicamos en clientes reales lo que diseñamos: contenido, pauta, landings y automatización bajo
+                una sola estrategia. Cada entrega la probamos con el mismo rigor que exigimos a tu negocio. No vendemos
+                teoría: vendemos sistemas que nosotros mismos operamos.
+              </p>
             </blockquote>
-            <p className="testimonial-featured__outcome">
-              <strong>Resultado:</strong> presencia ordenada, pauta en marcha y primeras ventas atribuibles en el primer mes
-              (relato del cliente; resultados varían según oferta y mercado).
-            </p>
-            <p className="testimonial-featured__meta">
-              <strong>Carlos Mendoza</strong> · Tienda de suplementos deportivos · Medellín, Colombia
-            </p>
-          </div>
-          <div className="grid grid--testimonials">
-            <article className="testimonial-card card card--glass">
-              <div className="testimonial-card__head">
-                <div className="testimonial-card__avatar" aria-hidden="true">
-                  AR
-                </div>
-                <div>
-                  <p className="testimonial-card__tag">Retail · Moda femenina · Bogotá</p>
-                  <div className="testimonial-card__stars" aria-hidden="true">
-                    ★★★★★
+            <div className="fluxa-social-proof__stats" role="list">
+              {FLUXA_INSTALLER_STATS.map(function (s) {
+                return (
+                  <div key={s.label} className="fluxa-social-proof__stat card card--glass" role="listitem">
+                    <span className="fluxa-social-proof__stat-num">{s.num}</span>
+                    <span className="fluxa-social-proof__stat-label">{s.label}</span>
                   </div>
-                  <p className="testimonial-card__meta">
-                    <strong>Andrea Rojas</strong> · Boutique de ropa femenina · Bogotá, Colombia
-                  </p>
-                </div>
+                );
+              })}
+            </div>
+
+            <div
+              className="fluxa-social-proof__carousel"
+              aria-label="Testimonios de clientes"
+              onMouseEnter={function () {
+                testimonialAutoplayPausedRef.current = true;
+              }}
+              onMouseLeave={function () {
+                testimonialAutoplayPausedRef.current = false;
+              }}
+            >
+              <div className="fluxa-social-proof__cards">
+                {testimonialSlice.map(function (t) {
+                  if (t.kind === 'image') {
+                    return (
+                      <article
+                        key={t.id}
+                        className="fluxa-social-proof__card fluxa-social-proof__card--image card card--glass"
+                      >
+                        <div className="fluxa-social-proof__image-wrap">
+                          <Image
+                            src={t.imageSrc}
+                            alt={t.imageAlt}
+                            fill
+                            className="fluxa-social-proof__image"
+                            sizes="(min-width: 768px) 28vw, 96vw"
+                          />
+                        </div>
+                      </article>
+                    );
+                  }
+                  return (
+                    <article key={t.id} className="fluxa-social-proof__card card card--glass">
+                      <div className="fluxa-social-proof__stars" aria-hidden="true">
+                        {'★★★★★'}
+                      </div>
+                      <p className="fluxa-social-proof__quote">&ldquo;{t.quote}&rdquo;</p>
+                      <div className="fluxa-social-proof__person">
+                        <div
+                          className={'fluxa-social-proof__avatar ' + t.avatarClass}
+                          aria-hidden="true"
+                        >
+                          {t.initials}
+                        </div>
+                        <div className="fluxa-social-proof__person-text">
+                          <p className="fluxa-social-proof__name">{t.name}</p>
+                          <p className="fluxa-social-proof__role">{t.role}</p>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
-              <p className="testimonial-card__text">
-                «Antes coordinaba diseñador, redactor y community manager por separado. Ahora Fluxa lo maneja todo y yo me
-                enfoco en vender.»
-              </p>
-              <p className="testimonial-card__outcome">
-                Resultado: un solo equipo para creativo y ejecución — menos coordinación, foco en ventas.
-              </p>
-            </article>
-            <article className="testimonial-card card card--glass">
-              <div className="testimonial-card__head">
-                <div className="testimonial-card__avatar" aria-hidden="true">
-                  MT
+              <div className="fluxa-social-proof__nav">
+                <button
+                  type="button"
+                  className="fluxa-social-proof__arrow"
+                  aria-label="Anterior"
+                  onClick={function () {
+                    setTestimonialPage(function (p) {
+                      var pages = Math.max(1, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize));
+                      var cur = Math.min(p, pages - 1);
+                      return (cur - 1 + pages) % pages;
+                    });
+                  }}
+                >
+                  ←
+                </button>
+                <div className="fluxa-social-proof__dots" role="tablist" aria-label="Página de testimonios">
+                  {Array.from({ length: testimonialPages }).map(function (_, i) {
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        role="tab"
+                        aria-selected={i === safeTestimonialPage}
+                        className={
+                          'fluxa-social-proof__dot' + (i === safeTestimonialPage ? ' fluxa-social-proof__dot--active' : '')
+                        }
+                        aria-label={'Página ' + (i + 1) + ' de ' + testimonialPages}
+                        onClick={function () {
+                          setTestimonialPage(i);
+                        }}
+                      />
+                    );
+                  })}
                 </div>
-                <div>
-                  <p className="testimonial-card__tag">Distribución B2B/B2C · Productos naturales · Cali</p>
-                  <div className="testimonial-card__stars" aria-hidden="true">
-                    ★★★★★
-                  </div>
-                  <p className="testimonial-card__meta">
-                    <strong>Miguel Torres</strong> · Distribuidora de productos naturales · Cali, Colombia
-                  </p>
-                </div>
+                <button
+                  type="button"
+                  className="fluxa-social-proof__arrow"
+                  aria-label="Siguiente"
+                  onClick={function () {
+                    setTestimonialPage(function (p) {
+                      var pages = Math.max(1, Math.ceil(FLUXA_TESTIMONIALS.length / testimonialPageSize));
+                      var cur = Math.min(p, pages - 1);
+                      return (cur + 1) % pages;
+                    });
+                  }}
+                >
+                  →
+                </button>
               </div>
-              <p className="testimonial-card__text">
-                «Las automatizaciones de WhatsApp cambiaron mi negocio. Respondo menos y vendo más. Increíble.»
-              </p>
-              <p className="testimonial-card__outcome">
-                Resultado: flujo de WhatsApp ordenado — menos mensajes manuales, más conversaciones que cierran.
-              </p>
-            </article>
+            </div>
           </div>
         </div>
       </section>
