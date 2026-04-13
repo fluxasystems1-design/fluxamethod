@@ -265,15 +265,33 @@ function ParticlesCanvas() {
 function AnimatedMrrChart({ conservador, probable, agresivo, shouldPlay }) {
   const ref = useRef(null);
   const legendRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const chartTooltipRef = useRef(null);
   const playedRef = useRef(false);
   const startRef = useRef(0);
   const rafRef = useRef(0);
   const lastElapsedRef = useRef(0);
 
+  const [tooltip, setTooltip] = useState(null);
+
   const maxY = useMemo(() => {
     const m = Math.max(...conservador, ...probable, ...agresivo, 100);
     return Math.ceil(m * 1.12);
   }, [conservador, probable, agresivo]);
+
+  const getMonthFromX = useCallback((clientX) => {
+    const canvas = ref.current;
+    if (!canvas) return null;
+    const rect = canvas.getBoundingClientRect();
+    const cssW = canvas.clientWidth;
+    const padL = 46;
+    const padR = 10;
+    const chartW = cssW - padL - padR;
+    if (chartW <= 0) return null;
+    const relX = clientX - rect.left;
+    const idx = Math.round(((relX - padL) / chartW) * 11);
+    return Math.max(0, Math.min(11, idx));
+  }, []);
 
   const drawScene = useCallback(
     (elapsed) => {
@@ -398,6 +416,42 @@ function AnimatedMrrChart({ conservador, probable, agresivo, shouldPlay }) {
         }
       }
 
+      const tip = chartTooltipRef.current;
+      if (tip) {
+        const idx = tip.mes - 1;
+        const xLine = padL + (idx / 11) * chartW;
+
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(xLine, padT);
+        ctx.lineTo(xLine, padT + chartH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        const tipLines = [
+          { data: conservador, color: '#60a5fa' },
+          { data: probable, color: '#fbbf24' },
+          { data: agresivo, color: '#22c55e' },
+        ];
+        for (const { data, color } of tipLines) {
+          const yPt = padT + chartH - (data[idx] / maxY) * chartH;
+          ctx.beginPath();
+          ctx.arc(xLine, yPt, 5, 0, Math.PI * 2);
+          ctx.fillStyle = color;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 12;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
       const legendT = pointPhaseStart + 12 * POINT_STAG + 120;
       if (legendRef.current) {
         const lo = elapsed >= legendT ? Math.min(1, (elapsed - legendT) / 400) : 0;
@@ -407,6 +461,55 @@ function AnimatedMrrChart({ conservador, probable, agresivo, shouldPlay }) {
       lastElapsedRef.current = elapsed;
     },
     [conservador, probable, agresivo, maxY]
+  );
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      const idx = getMonthFromX(e.clientX);
+      if (idx === null) return;
+      const canvas = ref.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const cssW = canvas.clientWidth;
+      const cssH = canvas.clientHeight;
+      const padL = 46;
+      const padR = 10;
+      const padT = 14;
+      const padB = 42;
+      const chartW = cssW - padL - padR;
+      const chartH = cssH - padT - padB;
+      const x = padL + (idx / 11) * chartW;
+      const y = padT + chartH - (probable[idx] / maxY) * chartH;
+      const data = {
+        screenX: x,
+        screenY: y,
+        canvasW: cssW,
+        mes: idx + 1,
+        con: conservador[idx],
+        prob: probable[idx],
+        agr: agresivo[idx],
+      };
+      chartTooltipRef.current = data;
+      setTooltip(data);
+      drawScene(lastElapsedRef.current);
+    },
+    [getMonthFromX, conservador, probable, agresivo, maxY, drawScene]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    chartTooltipRef.current = null;
+    setTooltip(null);
+    drawScene(lastElapsedRef.current);
+  }, [drawScene]);
+
+  const handleTouchMove = useCallback(
+    (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      if (!touch) return;
+      handleMouseMove({ clientX: touch.clientX });
+    },
+    [handleMouseMove]
   );
 
   useEffect(() => {
@@ -441,8 +544,37 @@ function AnimatedMrrChart({ conservador, probable, agresivo, shouldPlay }) {
   }, [conservador, probable, agresivo]);
 
   return (
-    <>
-      <canvas ref={ref} className="dg-chart-canvas" aria-hidden />
+    <div ref={wrapperRef} style={{ position: 'relative' }}>
+      <canvas
+        ref={ref}
+        className="dg-chart-canvas"
+        aria-hidden
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleMouseLeave}
+        style={{ cursor: 'crosshair', display: 'block', touchAction: 'none' }}
+      />
+      {tooltip && (
+        <div
+          className="dg-chart-tooltip"
+          style={{
+            left: tooltip.screenX > tooltip.canvasW / 2 ? tooltip.screenX - 130 : tooltip.screenX + 16,
+            top: Math.max(8, tooltip.screenY - 50),
+          }}
+        >
+          <p className="dg-chart-tooltip__mes">Mes {tooltip.mes}</p>
+          <p className="dg-chart-tooltip__row dg-chart-tooltip__row--con">
+            ${Math.round(tooltip.con).toLocaleString('es-CO')}
+          </p>
+          <p className="dg-chart-tooltip__row dg-chart-tooltip__row--prob">
+            ${Math.round(tooltip.prob).toLocaleString('es-CO')}
+          </p>
+          <p className="dg-chart-tooltip__row dg-chart-tooltip__row--agr">
+            ${Math.round(tooltip.agr).toLocaleString('es-CO')}
+          </p>
+        </div>
+      )}
       <div ref={legendRef} className="dg-legend dg-legend--chart">
         <span className="dg-legend-item">
           <span className="dg-legend-dash" aria-hidden />
@@ -457,7 +589,7 @@ function AnimatedMrrChart({ conservador, probable, agresivo, shouldPlay }) {
           Agresivo
         </span>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -550,7 +682,7 @@ function CountUpCell({ target, play, duration = 800 }) {
 }
 
 export default function DiagnosticoPage() {
-  const [phase, setPhase] = useState('form');
+  const [phase, setPhase] = useState('intro');
   const [step, setStep] = useState(0);
   const [panelClass, setPanelClass] = useState('dg-step-panel--visible');
   const [loadingExit, setLoadingExit] = useState(false);
@@ -867,7 +999,7 @@ export default function DiagnosticoPage() {
     <div className={'dg-page' + (phase === 'result' ? ' dg-page--result-live' : '')}>
       <ParticlesCanvas />
       <div className="dg-inner">
-        <header className="dg-header">
+        <header className={'dg-header' + (phase === 'intro' ? ' dg-header--intro' : '')}>
           <p className="dg-logo">
             <span className="dg-logo-fluxa">Fluxa </span>
             <span className="dg-logo-method">Method</span>
@@ -877,6 +1009,50 @@ export default function DiagnosticoPage() {
             Diagnóstico Digital Gratuito
           </p>
         </header>
+
+        {phase === 'intro' && (
+          <div className="dg-intro">
+            <p className="dg-intro-badge dg-intro-reveal dg-intro-reveal--1">
+              <span aria-hidden>✦</span> Herramienta gratuita para negocios
+            </p>
+            <h1 className="dg-intro-title dg-intro-reveal dg-intro-reveal--2">
+              Descubre cuánto podría generar tu negocio si instalas
+              un sistema digital que{' '}
+              <span className="dg-intro-accent">trabaje todos los días.</span>
+            </h1>
+            <p className="dg-intro-summary dg-intro-reveal dg-intro-reveal--3">
+              4 pasos · MRR en 3 escenarios · ~2 minutos
+            </p>
+            <p className="dg-intro-sub dg-intro-reveal dg-intro-reveal--4">
+              Introduce tus métricas de Instagram y obtén una proyección orientativa de MRR en
+              escenarios conservador, probable y agresivo — igual que verás al finalizar.
+            </p>
+            <p className="dg-intro-audience dg-intro-reveal dg-intro-reveal--5">
+              Pensado si vendes membresía, suscripción o producto recurrente y quieres ordenar números
+              antes de invertir en pauta o sistemas.
+            </p>
+            <ul className="dg-intro-bullets dg-intro-reveal dg-intro-reveal--6" aria-label="Qué incluye">
+              <li>Diagnóstico en 4 bloques (audiencia, contenido, precio, ads)</li>
+              <li>Tabla y gráfico comparando los tres escenarios</li>
+              <li>Insights y siguiente paso según tus datos</li>
+            </ul>
+            <p className="dg-intro-trust dg-intro-reveal dg-intro-reveal--7">
+              No guardamos tus métricas en ningún servidor.
+            </p>
+            <div className="dg-intro-cta-wrap dg-intro-reveal dg-intro-reveal--8">
+              <button
+                type="button"
+                className="dg-btn dg-btn--primary dg-intro-cta dg-btn--cta-glow"
+                onClick={() => setPhase('form')}
+              >
+                Calcular mi proyección →
+              </button>
+            </div>
+            <p className="dg-intro-note dg-intro-reveal dg-intro-reveal--9">
+              Gratis · Sin registro · Resultado en ~2 minutos
+            </p>
+          </div>
+        )}
 
         {phase === 'form' && (
           <>
