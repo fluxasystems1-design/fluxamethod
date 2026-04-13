@@ -1396,8 +1396,8 @@ h1, h2, h3 {
   }
 
   .hero__title--stacked .hero__title-line--lead {
-    font-size: clamp(1.58rem, 7.2vw, 2.15rem);
-    line-height: 1.18;
+    font-size: clamp(1.85rem, 8.4vw, 2.55rem);
+    line-height: 1.16;
     letter-spacing: -0.03em;
     text-align: center;
     font-weight: 900;
@@ -1417,7 +1417,7 @@ h1, h2, h3 {
     line-height: 1.55;
     color: rgba(203, 213, 225, 0.92);
     max-width: 26rem;
-    margin: 4px auto 20px;
+    margin: 4px auto 26px;
     text-align: center;
     font-weight: 400;
   }
@@ -1425,7 +1425,7 @@ h1, h2, h3 {
   .hero__ctas {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
     width: 100%;
     max-width: min(24rem, 100%);
     margin: 0 auto 16px;
@@ -1436,7 +1436,7 @@ h1, h2, h3 {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 10px 14px;
+    gap: 14px 22px;
     flex-wrap: wrap;
     width: 100%;
   }
@@ -1576,8 +1576,8 @@ h1, h2, h3 {
 
 /* Lead = mensaje principal (más grande) · support = segundo bloque */
 .hero__title--stacked .hero__title-line--lead {
-  font-size: clamp(1.75rem, 5.2vw, 3.25rem);
-  line-height: 1.1;
+  font-size: clamp(2.05rem, 6vw, 3.85rem);
+  line-height: 1.08;
   font-weight: 900;
 }
 
@@ -1628,7 +1628,7 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 18px;
   width: 100%;
   max-width: 24rem;
   margin: 0 auto;
@@ -1640,7 +1640,7 @@ h1, h2, h3 {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 12px 16px;
+  gap: 14px 22px;
   width: 100%;
 }
 
@@ -4313,7 +4313,7 @@ h1, h2, h3 {
   }
 
   .hero__ctas {
-    gap: 8px;
+    gap: 14px;
   }
 
   .btn--primary {

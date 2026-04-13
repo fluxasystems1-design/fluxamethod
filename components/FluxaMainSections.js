@@ -335,7 +335,7 @@ function FluxaWeekOsArticle({ w }) {
 }
 
 /** Intervalo del carrusel de testimonios (ms). */
-const TESTIMONIAL_AUTOPLAY_MS = 3500;
+const TESTIMONIAL_AUTOPLAY_MS = 2000;
 
 export default function FluxaMainSections() {
   const [planModalTier, setPlanModalTier] = useState(null);

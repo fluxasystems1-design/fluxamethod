@@ -15,11 +15,6 @@ export default function FluxaHero() {
               <br />
               Instala un sistema que lo haga por ti.
             </span>
-            <span className="hero__title-line hero__title-line--support">
-              Tu negocio debería vender contigo…
-              <br />
-              y sin ti también.
-            </span>
           </h1>
           <p className="hero__subtitle">
             Un sistema que ayuda a negocios a dejar de depender de ellos mismos para vender, instalando
