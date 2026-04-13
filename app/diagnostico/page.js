@@ -640,6 +640,17 @@ export default function DiagnosticoPage() {
   }, []);
 
   useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://assets.calendly.com/assets/external/widget.css';
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.head.appendChild(script);
+  }, []);
+
+  useEffect(() => {
     if (phase !== 'loading') return undefined;
     setLoadingExit(false);
     setResultReveal(false);
@@ -1285,17 +1296,30 @@ export default function DiagnosticoPage() {
                   ref={ctaBlockRef}
                 >
                   <h3 className="dg-cta-title">¿Quieres llevar esto a resultados reales?</h3>
-                  <p className="dg-cta-sub">
-                    Agenda tu diagnóstico con Fluxa Method por WhatsApp o vuelve al sitio al CTA principal.
-                  </p>
+                  <p className="dg-cta-sub">Elige cómo quieres dar el siguiente paso con nuestro equipo.</p>
+                  <button
+                    type="button"
+                    className="dg-btn dg-btn--primary dg-btn--block dg-btn--cta-glow"
+                    onClick={() => {
+                      if (window.Calendly) {
+                        window.Calendly.initPopupWidget({
+                          url: 'https://calendly.com/fluxasystems1/30min',
+                        });
+                      }
+                    }}
+                    aria-label="Agendar videollamada gratuita en Calendly"
+                  >
+                    Agendar videollamada gratuita →
+                  </button>
                   <a
                     href={WA_HREF}
-                    className="dg-btn dg-btn--primary dg-btn--block dg-btn--cta-glow"
+                    className="dg-btn dg-btn--ghost dg-btn--block"
+                    style={{ marginTop: '10px' }}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Agendar diagnóstico: abrir WhatsApp"
+                    aria-label="Abrir WhatsApp para escribir con Fluxa Method"
                   >
-                    Agendar diagnóstico →
+                    Prefiero escribir por WhatsApp →
                   </a>
                   <button type="button" className="dg-link-muted" onClick={resetAll}>
                     Calcular de nuevo con otras métricas
