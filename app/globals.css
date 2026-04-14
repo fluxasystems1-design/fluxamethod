@@ -2213,11 +2213,11 @@ h1, h2, h3 {
   position: relative;
   z-index: 1;
   padding: 2rem 1.65rem;
-  transform: scale(1.03);
+  transform: none;
 }
 
 .card--popular:hover {
-  transform: scale(1.05) translateY(-3px);
+  transform: translateY(-3px);
   box-shadow: 0 12px 40px rgba(168, 85, 247, 0.35);
 }
 
@@ -4434,18 +4434,18 @@ h1, h2, h3 {
 
   .grid--pricing {
     grid-template-columns: repeat(3, 1fr);
-    align-items: center;
+    align-items: stretch;
     gap: 1.5rem;
   }
 
   .card--popular {
-    transform: scale(1.1);
+    transform: scale(1.04);
     z-index: 2;
     padding: 2.35rem 2rem;
   }
 
   .card--popular:hover {
-    transform: scale(1.12) translateY(-3px);
+    transform: scale(1.06) translateY(-3px);
   }
 
   .img-wrapper--gears-bg {

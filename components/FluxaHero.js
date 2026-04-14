@@ -21,7 +21,12 @@ export default function FluxaHero() {
             estructura, automatización y conversión.
           </p>
           <div className="hero__ctas">
-            <a href="/diagnostico" className="btn btn--primary btn--block hero__cta-primary">
+            <a
+              href="https://calendly.com/fluxasystems1/30min"
+              className="btn btn--primary btn--block hero__cta-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Quiero instalar mi sistema de ventas →
             </a>
             <div className="hero__cta-secondary-row">

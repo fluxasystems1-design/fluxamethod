@@ -1004,40 +1004,31 @@ export default function DiagnosticoPage() {
             <span className="dg-logo-fluxa">Fluxa </span>
             <span className="dg-logo-method">Method</span>
           </p>
+        </header>
+        {phase === 'intro' && (
           <p className="dg-badge">
             <span aria-hidden>{'\u2726'} </span>
             Diagnóstico Digital Gratuito
           </p>
-        </header>
+        )}
 
         {phase === 'intro' && (
           <div className="dg-intro">
-            <p className="dg-intro-badge dg-intro-reveal dg-intro-reveal--1">
-              <span aria-hidden>✦</span> Herramienta gratuita para negocios
-            </p>
             <h1 className="dg-intro-title dg-intro-reveal dg-intro-reveal--2">
               Descubre cuánto podría generar tu negocio si instalas
               un sistema digital que{' '}
-              <span className="dg-intro-accent">trabaje todos los días.</span>
+              <span className="dg-intro-accent">trabaje 24/7 para ti.</span>
             </h1>
             <p className="dg-intro-summary dg-intro-reveal dg-intro-reveal--3">
-              4 pasos · MRR en 3 escenarios · ~2 minutos
+              Gratis · Sin registro · Resultado en ~2 minutos
             </p>
             <p className="dg-intro-sub dg-intro-reveal dg-intro-reveal--4">
-              Introduce tus métricas de Instagram y obtén una proyección orientativa de MRR en
-              escenarios conservador, probable y agresivo — igual que verás al finalizar.
+              Ingresa tus métricas, el precio estimado de tu producto o servicio + tu inversión en ads para ver una
+              proyección de crecimiento en 3 escenarios.
             </p>
             <p className="dg-intro-audience dg-intro-reveal dg-intro-reveal--5">
               Pensado si vendes membresía, suscripción o producto recurrente y quieres ordenar números
               antes de invertir en pauta o sistemas.
-            </p>
-            <ul className="dg-intro-bullets dg-intro-reveal dg-intro-reveal--6" aria-label="Qué incluye">
-              <li>Diagnóstico en 4 bloques (audiencia, contenido, precio, ads)</li>
-              <li>Tabla y gráfico comparando los tres escenarios</li>
-              <li>Insights y siguiente paso según tus datos</li>
-            </ul>
-            <p className="dg-intro-trust dg-intro-reveal dg-intro-reveal--7">
-              No guardamos tus métricas en ningún servidor.
             </p>
             <div className="dg-intro-cta-wrap dg-intro-reveal dg-intro-reveal--8">
               <button
@@ -1129,7 +1120,7 @@ export default function DiagnosticoPage() {
                       {'\u{1F440}'}
                     </span>
                     <h2 className="dg-step-title">Tu contenido</h2>
-                    <p className="dg-step-sub">Métricas de engagement</p>
+                    <p className="dg-step-sub">Impacto de tu contenido</p>
                   </div>
                   <div>
                     <p className="dg-q">Vistas promedio por reel</p>
@@ -1180,7 +1171,7 @@ export default function DiagnosticoPage() {
                     <p className="dg-step-sub">Precio y monetización</p>
                   </div>
                   <div>
-                    <p className="dg-q">Precio mensual de tu membresía o producto (USD)</p>
+                    <p className="dg-q">Precio promedio de tu producto o servicio</p>
                     <div className="dg-slider-track-wrap" style={{ '--pct': pct(precioMembresia, 5, 500) }}>
                       <input
                         type="range"
@@ -1206,7 +1197,7 @@ export default function DiagnosticoPage() {
                     <span className="dg-step-icon" aria-hidden>
                       {'\u{1F4E2}'}
                     </span>
-                    <h2 className="dg-step-title">Ads y opciones</h2>
+                    <h2 className="dg-step-title">Ads y orgánico</h2>
                     <p className="dg-step-sub">Inversión y ritmo de publicación</p>
                   </div>
                   <div>
@@ -1488,19 +1479,30 @@ export default function DiagnosticoPage() {
                     Agendar videollamada gratuita →
                   </button>
                   <a
-                    href={WA_HREF}
+                    href="/"
                     className="dg-btn dg-btn--ghost dg-btn--block"
                     style={{ marginTop: '10px' }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir WhatsApp para escribir con Fluxa Method"
+                    aria-label="Volver a la página principal"
                   >
-                    Prefiero escribir por WhatsApp →
+                    Soluciones Fluxa →
                   </a>
                   <button type="button" className="dg-link-muted" onClick={resetAll}>
                     Calcular de nuevo con otras métricas
                   </button>
                 </div>
+                {phase === 'result' && ctaIn && (
+                  <a
+                    href={WA_HREF}
+                    className="dg-wa-float"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir WhatsApp de Fluxa Method"
+                  >
+                    <svg viewBox="0 0 16 16" className="dg-wa-float-icon" aria-hidden="true">
+                      <path d="M13.601 2.326A7.854 7.854 0 0 0 8.062 0C3.87 0 .467 3.403.467 7.595c0 1.335.347 2.638 1.007 3.79L0 16l4.777-1.506a7.568 7.568 0 0 0 3.284.746h.003c4.191 0 7.595-3.403 7.595-7.595 0-2.03-.79-3.94-2.058-5.319zm-5.54 11.57h-.002a6.26 6.26 0 0 1-3.186-.87l-.228-.135-2.834.894.907-2.764-.148-.238a6.258 6.258 0 0 1-.967-3.345c0-3.454 2.807-6.261 6.262-6.261 1.67 0 3.235.65 4.415 1.831a6.2 6.2 0 0 1 1.833 4.414c-.002 3.454-2.81 6.261-6.265 6.261zm3.442-4.69c-.188-.094-1.11-.547-1.282-.61-.172-.063-.297-.094-.422.094-.125.188-.484.61-.594.735-.109.125-.219.141-.406.047-.188-.094-.793-.292-1.51-.932-.558-.497-.935-1.11-1.045-1.297-.109-.188-.012-.29.082-.383.084-.083.188-.219.281-.328.094-.109.125-.188.188-.313.063-.125.031-.234-.016-.328-.047-.094-.422-1.016-.578-1.39-.152-.365-.306-.315-.422-.321-.109-.005-.234-.007-.359-.007a.696.696 0 0 0-.5.234c-.172.188-.656.64-.656 1.56 0 .922.672 1.813.766 1.938.094.125 1.323 2.02 3.205 2.832.447.193.795.308 1.066.394.448.143.855.123 1.177.075.359-.054 1.11-.453 1.266-.89.156-.438.156-.813.109-.89-.047-.078-.172-.125-.359-.219z" />
+                    </svg>
+                  </a>
+                )}
               </div>
             </div>
           </div>
