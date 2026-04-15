@@ -50,18 +50,19 @@ function computeDiagnostics(answers) {
   const netPts = Math.min(netCount * 4, 20);
   const freqPts = { never: 0, low: 5, mid: 10, daily: 15 }[contentFreq] || 0;
   const webPts = { none: 0, basic: 5, noConv: 8, works: 15 }[webStatus] || 0;
-  let folPts = 2;
+  let folPts = 0;
   if (followers > 10000) folPts = 15;
   else if (followers > 1000) folPts = 10;
   else if (followers > 100) folPts = 5;
+  else if (followers > 0) folPts = 2;
   const invCurPts = { none: 0, lt200: 5, mid: 10, gt500: 15 }[investCurrent] || 0;
 
   const modelPts = { physical: 10, service: 12, ecommerce: 14, local: 11 }[businessModel] || 0;
   const capActPts = (clientesActuales / 100) * 8;
   const objPts = { newc: 10, upsell: 8, brand: 7, all: 12 }[objective] || 0;
   const plazoPts = { u1: 12, u3: 10, u6: 8, chill: 5 }[timeGoal] || 0;
-  const wantPts = ((desiredClients - 5) / 195) * 6;
-  const willingPts = ((investWilling - 100) / 1900) * 10;
+  const wantPts = (desiredClients / 200) * 6;
+  const willingPts = (investWilling / 2000) * 10;
   const teamPts = { solo: 0, part: 4, messy: 6, full: 8 }[team] || 0;
 
   const earned =
@@ -89,7 +90,7 @@ function computeDiagnostics(answers) {
   );
   const effRaw = modelPts + timePts;
   const eficiencia = clamp(Math.round((effRaw / 34) * 100), 0, 100);
-  const willingNorm = (investWilling - 100) / 1900;
+  const willingNorm = investWilling / 2000;
   const escalabilidad = clamp(Math.round(willingNorm * 55 + score * 0.45), 0, 100);
 
   const ca = clientesActuales;
@@ -159,25 +160,27 @@ function OptCheck() {
 }
 
 export default function DiagnosticoWidget() {
+  const numInputWidth = (v, minChars = 3) =>
+    `${Math.max(String(Math.abs(Number(v) || 0)).length, minChars) + 2}ch`;
   const [phase, setPhase] = useState('form');
   const [step, setStep] = useState(0);
   const [panelClass, setPanelClass] = useState('diagnostico-step-panel--visible');
 
   const [businessAge, setBusinessAge] = useState(null);
   const [businessModel, setBusinessModel] = useState(null);
-  const [clientesActuales, setClientesActuales] = useState(5);
+  const [clientesActuales, setClientesActuales] = useState(0);
 
   const [networks, setNetworks] = useState(() => new Set());
   const [contentFreq, setContentFreq] = useState(null);
   const [webStatus, setWebStatus] = useState(null);
-  const [followers, setFollowers] = useState(500);
+  const [followers, setFollowers] = useState(0);
 
   const [objective, setObjective] = useState(null);
   const [timeGoal, setTimeGoal] = useState(null);
-  const [desiredClients, setDesiredClients] = useState(20);
+  const [desiredClients, setDesiredClients] = useState(0);
 
   const [investCurrent, setInvestCurrent] = useState(null);
-  const [investWilling, setInvestWilling] = useState(300);
+  const [investWilling, setInvestWilling] = useState(0);
   const [team, setTeam] = useState(null);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -373,16 +376,16 @@ export default function DiagnosticoWidget() {
     setStep(0);
     setBusinessAge(null);
     setBusinessModel(null);
-    setClientesActuales(5);
+    setClientesActuales(0);
     setNetworks(new Set());
     setContentFreq(null);
     setWebStatus(null);
-    setFollowers(500);
+    setFollowers(0);
     setObjective(null);
     setTimeGoal(null);
-    setDesiredClients(20);
+    setDesiredClients(0);
     setInvestCurrent(null);
-    setInvestWilling(300);
+    setInvestWilling(0);
     setTeam(null);
     setResult(null);
     setPanelClass('diagnostico-step-panel--visible');
@@ -509,10 +512,43 @@ export default function DiagnosticoWidget() {
                         min={0}
                         max={100}
                         value={clientesActuales}
+                        onInput={(e) => setClientesActuales(Number(e.currentTarget.value))}
                         onChange={(e) => setClientesActuales(Number(e.target.value))}
                         aria-valuetext={`${clientesActuales} clientes`}
                       />
-                      <span className="diagnostico-slider-val">{clientesActuales}</span>
+                      <div className="diagnostico-slider-control">
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setClientesActuales((prev) => clamp(prev - 1, 0, 100))}
+                          aria-label="Disminuir clientes nuevos al mes"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="diagnostico-slider-input"
+                          min={0}
+                          max={100}
+                          step={1}
+                          style={{ width: numInputWidth(clientesActuales, 2) }}
+                          value={clientesActuales}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setClientesActuales(clamp(v, 0, 100));
+                          }}
+                          aria-label="Clientes nuevos al mes"
+                        />
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setClientesActuales((prev) => clamp(prev + 1, 0, 100))}
+                          aria-label="Aumentar clientes nuevos al mes"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -597,12 +633,45 @@ export default function DiagnosticoWidget() {
                         className="diagnostico-range"
                         min={0}
                         max={50000}
-                        step={100}
+                        step={1}
                         value={followers}
+                        onInput={(e) => setFollowers(Number(e.currentTarget.value))}
                         onChange={(e) => setFollowers(Number(e.target.value))}
                         aria-valuetext={formatFollowers(followers)}
                       />
-                      <span className="diagnostico-slider-val">{formatFollowers(followers)}</span>
+                      <div className="diagnostico-slider-control">
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setFollowers((prev) => clamp(prev - 1, 0, 50000))}
+                          aria-label="Disminuir seguidores actuales"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="diagnostico-slider-input"
+                          min={0}
+                          max={50000}
+                          step={1}
+                          style={{ width: numInputWidth(followers, 2) }}
+                          value={followers}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setFollowers(clamp(v, 0, 50000));
+                          }}
+                          aria-label="Seguidores actuales"
+                        />
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setFollowers((prev) => clamp(prev + 1, 0, 50000))}
+                          aria-label="Aumentar seguidores actuales"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -663,17 +732,50 @@ export default function DiagnosticoWidget() {
                     <p className="diagnostico-q">¿Cuántos clientes nuevos al mes quisieras tener?</p>
                     <div
                       className="diagnostico-slider-row"
-                      style={{ '--pct': `${((desiredClients - 5) / 195) * 100}%` }}
+                      style={{ '--pct': `${(desiredClients / 200) * 100}%` }}
                     >
                       <input
                         type="range"
                         className="diagnostico-range"
-                        min={5}
+                        min={0}
                         max={200}
                         value={desiredClients}
+                        onInput={(e) => setDesiredClients(Number(e.currentTarget.value))}
                         onChange={(e) => setDesiredClients(Number(e.target.value))}
                       />
-                      <span className="diagnostico-slider-val">{desiredClients}</span>
+                      <div className="diagnostico-slider-control">
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setDesiredClients((prev) => clamp(prev - 1, 0, 200))}
+                          aria-label="Disminuir clientes deseados al mes"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="diagnostico-slider-input"
+                          min={0}
+                          max={200}
+                          step={1}
+                          style={{ width: numInputWidth(desiredClients, 2) }}
+                          value={desiredClients}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setDesiredClients(clamp(v, 0, 200));
+                          }}
+                          aria-label="Clientes deseados al mes"
+                        />
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setDesiredClients((prev) => clamp(prev + 1, 0, 200))}
+                          aria-label="Aumentar clientes deseados al mes"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -712,18 +814,51 @@ export default function DiagnosticoWidget() {
                     <p className="diagnostico-q">¿Cuánto invertirías para crecer?</p>
                     <div
                       className="diagnostico-slider-row"
-                      style={{ '--pct': `${((investWilling - 100) / 1900) * 100}%` }}
+                      style={{ '--pct': `${(investWilling / 2000) * 100}%` }}
                     >
                       <input
                         type="range"
                         className="diagnostico-range"
-                        min={100}
+                        min={0}
                         max={2000}
-                        step={50}
+                        step={1}
                         value={investWilling}
+                        onInput={(e) => setInvestWilling(Number(e.currentTarget.value))}
                         onChange={(e) => setInvestWilling(Number(e.target.value))}
                       />
-                      <span className="diagnostico-slider-val">Inversión mensual: ${investWilling} USD</span>
+                      <div className="diagnostico-slider-control">
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setInvestWilling((prev) => clamp(prev - 1, 0, 2000))}
+                          aria-label="Disminuir inversión mensual para crecer"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="diagnostico-slider-input"
+                          min={0}
+                          max={2000}
+                          step={1}
+                          style={{ width: numInputWidth(investWilling, 3) }}
+                          value={investWilling}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setInvestWilling(clamp(v, 0, 2000));
+                          }}
+                          aria-label="Inversión mensual para crecer en USD"
+                        />
+                        <button
+                          type="button"
+                          className="diagnostico-slider-btn"
+                          onClick={() => setInvestWilling((prev) => clamp(prev + 1, 0, 2000))}
+                          aria-label="Aumentar inversión mensual para crecer"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
 
                     <p className="diagnostico-q">¿Tienes equipo de marketing?</p>

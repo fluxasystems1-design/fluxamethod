@@ -210,6 +210,66 @@
   white-space: nowrap;
 }
 
+.dg-slider-val-input {
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  box-sizing: content-box;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--dg-font-body);
+  color: #fff;
+  background: rgba(8, 12, 20, 0.75);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 8px;
+  text-align: right;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.dg-slider-val-input:focus-visible {
+  outline: 2px solid var(--dg-primary);
+  outline-offset: 1px;
+}
+
+.dg-slider-val-input::-webkit-outer-spin-button,
+.dg-slider-val-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.dg-slider-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dg-slider-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  background: rgba(8, 12, 20, 0.75);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dg-slider-btn:hover {
+  border-color: rgba(168, 85, 247, 0.8);
+}
+
+.dg-slider-btn:focus-visible {
+  outline: 2px solid var(--dg-primary);
+  outline-offset: 1px;
+}
+
 .dg-slider-track-wrap {
   --pct: 0%;
   position: relative;

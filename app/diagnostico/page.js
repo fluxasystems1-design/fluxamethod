@@ -117,7 +117,7 @@ function computeProjection(inputs) {
   const sum = (a) => a.reduce((s, v) => s + v, 0);
 
   const freqScore = { never: 20, rarely: 40, sometimes: 65, often: 85 }[freqHistorias] ?? 50;
-  const ratioHist = vistasHistoria / Math.max(seguidores, 1);
+  const ratioHist = seguidores > 0 ? vistasHistoria / seguidores : 0;
   const audienciaCaliente = clamp(Math.round(ratioHist * 120), 5, 100);
   const potencialDescubrimiento = clamp(
     Math.round((Math.log10(vistasReel + 50) / Math.log10(500050)) * 100),
@@ -248,7 +248,7 @@ function computeProjection(inputs) {
         'Estás publicando bastante, lo cual es positivo. Para que ese esfuerzo se traduzca en ventas, separa tu contenido en dos tipos — el que construye tu marca y el que vende directamente. Protege días específicos de la semana exclusivamente para presentar tu membresía o producto.',
     },
     {
-      when: precioMembresia < 20,
+      when: precioMembresia > 0 && precioMembresia < 20,
       text:
         'Tu precio actual es bajo, lo que significa que necesitas muchos clientes para generar ingresos significativos. Trabaja en subir el valor por cliente — un plan anual con descuento, un servicio adicional o un producto complementario pueden aumentar tus ingresos sin necesitar más compradores nuevos.',
     },
@@ -901,14 +901,14 @@ export default function DiagnosticoPage() {
   const [loadingExit, setLoadingExit] = useState(false);
   const [resultReveal, setResultReveal] = useState(false);
 
-  const [seguidores, setSeguidores] = useState(10000);
-  const [vistasHistoria, setVistasHistoria] = useState(500);
-  const [vistasReel, setVistasReel] = useState(3000);
-  const [likesPub, setLikesPub] = useState(300);
-  const [precioMembresia, setPrecioMembresia] = useState(29);
+  const [seguidores, setSeguidores] = useState(0);
+  const [vistasHistoria, setVistasHistoria] = useState(0);
+  const [vistasReel, setVistasReel] = useState(0);
+  const [likesPub, setLikesPub] = useState(0);
+  const [precioMembresia, setPrecioMembresia] = useState(0);
   const [inversionAds, setInversionAds] = useState(0);
   const [storyFreq, setStoryFreq] = useState(null);
-  const [publicacionesSem, setPublicacionesSem] = useState(3);
+  const [publicacionesSem, setPublicacionesSem] = useState(0);
 
   const [frozenResult, setFrozenResult] = useState(null);
 
@@ -1162,14 +1162,14 @@ export default function DiagnosticoPage() {
   const resetAll = useCallback(() => {
     setPhase('form');
     setStep(0);
-    setSeguidores(10000);
-    setVistasHistoria(500);
-    setVistasReel(3000);
-    setLikesPub(300);
-    setPrecioMembresia(29);
+    setSeguidores(0);
+    setVistasHistoria(0);
+    setVistasReel(0);
+    setLikesPub(0);
+    setPrecioMembresia(0);
     setInversionAds(0);
     setStoryFreq(null);
-    setPublicacionesSem(3);
+    setPublicacionesSem(0);
     setFrozenResult(null);
     setPanelClass('dg-step-panel--visible');
     setLoadingExit(false);
@@ -1179,6 +1179,8 @@ export default function DiagnosticoPage() {
   }, []);
 
   const pct = (v, min, max) => `${((v - min) / (max - min)) * 100}%`;
+  const numInputWidth = (v, minChars = 3) =>
+    `${Math.max(String(Math.abs(Number(v) || 0)).length, minChars) + 2}ch`;
 
   const res = frozenResult;
   const mrrProb = res?.probable;
@@ -1303,38 +1305,104 @@ export default function DiagnosticoPage() {
                   </div>
                   <div>
                     <p className="dg-q">Número de seguidores</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(seguidores, 500, 500000) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(seguidores, 0, 500000) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={500}
+                        min={0}
                         max={500000}
-                        step={500}
+                        step={1}
                         value={seguidores}
+                        onInput={(e) => setSeguidores(Number(e.currentTarget.value))}
                         onChange={(e) => setSeguidores(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatNum(seguidores)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setSeguidores((prev) => clamp(prev - 1, 0, 500000))}
+                          aria-label="Disminuir número de seguidores"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={500000}
+                          step={1}
+                          style={{ width: numInputWidth(seguidores, 4) }}
+                          value={seguidores}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setSeguidores(clamp(v, 0, 500000));
+                          }}
+                          aria-label="Número de seguidores"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setSeguidores((prev) => clamp(prev + 1, 0, 500000))}
+                          aria-label="Aumentar número de seguidores"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div>
                     <p className="dg-q">Vistas promedio por historia</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(vistasHistoria, 10, 100000) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(vistasHistoria, 0, 100000) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={10}
+                        min={0}
                         max={100000}
-                        step={10}
+                        step={1}
                         value={vistasHistoria}
+                        onInput={(e) => setVistasHistoria(Number(e.currentTarget.value))}
                         onChange={(e) => setVistasHistoria(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatNum(vistasHistoria)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setVistasHistoria((prev) => clamp(prev - 1, 0, 100000))}
+                          aria-label="Disminuir vistas por historia"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={100000}
+                          step={1}
+                          style={{ width: numInputWidth(vistasHistoria, 3) }}
+                          value={vistasHistoria}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setVistasHistoria(clamp(v, 0, 100000));
+                          }}
+                          aria-label="Vistas promedio por historia"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setVistasHistoria((prev) => clamp(prev + 1, 0, 100000))}
+                          aria-label="Aumentar vistas por historia"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1351,38 +1419,104 @@ export default function DiagnosticoPage() {
                   </div>
                   <div>
                     <p className="dg-q">Vistas promedio por reel</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(vistasReel, 50, 500000) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(vistasReel, 0, 500000) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={50}
+                        min={0}
                         max={500000}
-                        step={50}
+                        step={1}
                         value={vistasReel}
+                        onInput={(e) => setVistasReel(Number(e.currentTarget.value))}
                         onChange={(e) => setVistasReel(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatNum(vistasReel)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setVistasReel((prev) => clamp(prev - 1, 0, 500000))}
+                          aria-label="Disminuir vistas por reel"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={500000}
+                          step={1}
+                          style={{ width: numInputWidth(vistasReel, 3) }}
+                          value={vistasReel}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setVistasReel(clamp(v, 0, 500000));
+                          }}
+                          aria-label="Vistas promedio por reel"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setVistasReel((prev) => clamp(prev + 1, 0, 500000))}
+                          aria-label="Aumentar vistas por reel"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div>
                     <p className="dg-q">Likes promedio por publicación</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(likesPub, 5, 50000) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(likesPub, 0, 50000) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={5}
+                        min={0}
                         max={50000}
-                        step={5}
+                        step={1}
                         value={likesPub}
+                        onInput={(e) => setLikesPub(Number(e.currentTarget.value))}
                         onChange={(e) => setLikesPub(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatNum(likesPub)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setLikesPub((prev) => clamp(prev - 1, 0, 50000))}
+                          aria-label="Disminuir likes promedio por publicación"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={50000}
+                          step={1}
+                          style={{ width: numInputWidth(likesPub, 2) }}
+                          value={likesPub}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setLikesPub(clamp(v, 0, 50000));
+                          }}
+                          aria-label="Likes promedio por publicación"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setLikesPub((prev) => clamp(prev + 1, 0, 50000))}
+                          aria-label="Aumentar likes promedio por publicación"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1399,20 +1533,53 @@ export default function DiagnosticoPage() {
                   </div>
                   <div>
                     <p className="dg-q">Precio promedio de tu producto o servicio</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(precioMembresia, 5, 500) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(precioMembresia, 0, 500) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={5}
+                        min={0}
                         max={500}
                         step={1}
                         value={precioMembresia}
+                        onInput={(e) => setPrecioMembresia(Number(e.currentTarget.value))}
                         onChange={(e) => setPrecioMembresia(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatMoney(precioMembresia)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setPrecioMembresia((prev) => clamp(prev - 1, 0, 500))}
+                          aria-label="Disminuir precio promedio"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={500}
+                          step={1}
+                          style={{ width: numInputWidth(precioMembresia, 2) }}
+                          value={precioMembresia}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setPrecioMembresia(clamp(v, 0, 500));
+                          }}
+                          aria-label="Precio promedio de tu producto o servicio"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setPrecioMembresia((prev) => clamp(prev + 1, 0, 500))}
+                          aria-label="Aumentar precio promedio"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1435,14 +1602,47 @@ export default function DiagnosticoPage() {
                         className="dg-range"
                         min={0}
                         max={10000}
-                        step={50}
+                        step={1}
                         value={inversionAds}
+                        onInput={(e) => setInversionAds(Number(e.currentTarget.value))}
                         onChange={(e) => setInversionAds(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{formatMoney(inversionAds)}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setInversionAds((prev) => clamp(prev - 1, 0, 10000))}
+                          aria-label="Disminuir inversión mensual en ads"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={10000}
+                          step={1}
+                          style={{ width: numInputWidth(inversionAds, 2) }}
+                          value={inversionAds}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setInversionAds(clamp(v, 0, 10000));
+                          }}
+                          aria-label="Inversión mensual en ads"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setInversionAds((prev) => clamp(prev + 1, 0, 10000))}
+                          aria-label="Aumentar inversión mensual en ads"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -1463,20 +1663,53 @@ export default function DiagnosticoPage() {
                   </div>
                   <div>
                     <p className="dg-q">Publicaciones por semana</p>
-                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(publicacionesSem, 1, 14) }}>
+                    <div className="dg-slider-track-wrap" style={{ '--pct': pct(publicacionesSem, 0, 14) }}>
                       <input
                         type="range"
                         className="dg-range"
-                        min={1}
+                        min={0}
                         max={14}
                         step={1}
                         value={publicacionesSem}
+                        onInput={(e) => setPublicacionesSem(Number(e.currentTarget.value))}
                         onChange={(e) => setPublicacionesSem(Number(e.target.value))}
                       />
                     </div>
                     <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
                       <span />
-                      <span className="dg-slider-val">{publicacionesSem}</span>
+                      <div className="dg-slider-control">
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setPublicacionesSem((prev) => clamp(prev - 1, 0, 14))}
+                          aria-label="Disminuir publicaciones por semana"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          className="dg-slider-val-input"
+                          min={0}
+                          max={14}
+                          step={1}
+                          style={{ width: numInputWidth(publicacionesSem, 2) }}
+                          value={publicacionesSem}
+                          onChange={(e) => {
+                            const v = Number(e.currentTarget.value);
+                            if (Number.isNaN(v)) return;
+                            setPublicacionesSem(clamp(v, 0, 14));
+                          }}
+                          aria-label="Publicaciones por semana"
+                        />
+                        <button
+                          type="button"
+                          className="dg-slider-btn"
+                          onClick={() => setPublicacionesSem((prev) => clamp(prev + 1, 0, 14))}
+                          aria-label="Aumentar publicaciones por semana"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                   {liveMrrMes1 != null && (
