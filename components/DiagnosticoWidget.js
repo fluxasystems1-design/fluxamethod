@@ -892,7 +892,7 @@ export default function DiagnosticoWidget() {
               </div>
 
               <div className="diagnostico-card diagnostico-fade-stagger">
-                <h4 className="diagnostico-result-block-title">Insights personalizados</h4>
+                <h4 className="diagnostico-result-block-title">Analisis Personalizado</h4>
                 <ul className="diagnostico-insights">
                   {result.insights.map((t) => (
                     <li key={t}>{t}</li>

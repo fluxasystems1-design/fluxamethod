@@ -6,11 +6,35 @@ export const metadata = {
     'Proyecta tu MRR con membresía: escenarios conservador, probable y agresivo. Herramienta gratuita Fluxa Method.',
 };
 
-/**
- * Layout dedicado a /diagnostico (sin Navbar/Footer del home).
- * Nota: en App Router el <html>/<body> solo puede estar en app/layout.js raíz;
- * el fondo y la tipografía se aplican vía .diag-layout-root en diagnostico.css.
- */
 export default function DiagnosticoLayout({ children }) {
-  return <div className="diag-layout-root">{children}</div>;
+  return (
+    <div className="diag-layout-root">
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '1007002315008094');
+            fbq('track', 'PageView');
+          `,
+        }}
+      />
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: 'none' }}
+          src="https://www.facebook.com/tr?id=1007002315008094&ev=PageView&noscript=1"
+          alt=""
+        />
+      </noscript>
+      {children}
+    </div>
+  );
 }

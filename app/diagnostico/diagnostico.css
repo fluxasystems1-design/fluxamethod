@@ -696,6 +696,33 @@
   margin: 0;
 }
 
+.dg-fluxa-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(167, 139, 250, 0.95);
+  margin: 16px 0 6px;
+}
+
+.dg-fluxa-kicker:first-of-type {
+  margin-top: 4px;
+}
+
+.dg-fluxa-honest {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.dg-next-rule {
+  height: 1px;
+  margin: 18px 0 14px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.25), transparent);
+  border: 0;
+}
+
 .dg-cta-title {
   font-family: var(--dg-font-head);
   font-size: 1.1rem;

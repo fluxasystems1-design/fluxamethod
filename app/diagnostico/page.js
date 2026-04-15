@@ -35,6 +35,54 @@ function formatUsdInteger(n) {
   return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.round(n));
 }
 
+/** Lectura directa del modelo (sin nuevas preguntas al formulario). */
+function buildFluxaDiagnostico({
+  mrr_mes1,
+  inversionAds,
+  potencialDescubrimiento,
+  storyRare,
+  riesgoRetencion,
+}) {
+  let lecturaHonesta;
+
+  if (mrr_mes1 < 150) {
+    lecturaHonesta =
+      'Siendo directo: hoy no hay un sistema claro que convierta tu audiencia en ingresos. Puede ser que tu oferta no esté conectando, que el proceso de compra tenga fricciones o que el mensaje no sea lo suficientemente claro. Antes de crecer hay que resolver cuál de esos tres es el problema real.';
+  } else if (inversionAds >= 300 && mrr_mes1 < 500) {
+    lecturaHonesta =
+      'Estás gastando en publicidad pero los ingresos no lo reflejan. Eso casi siempre significa que el anuncio lleva a las personas a un lugar donde no encuentran una razón clara para comprar. Más presupuesto no va a resolver eso — hay que arreglar lo que pasa después del clic.';
+  } else if (mrr_mes1 < 500) {
+    if (storyRare) {
+      lecturaHonesta =
+        'Tus ingresos todavía están en etapa de construcción. El problema principal es que casi no estás usando las historias para vender, y ese es el canal que más cierra ventas de membresías o productos digitales. Tener audiencia no es suficiente si el canal de venta no está activo.';
+    } else {
+      lecturaHonesta =
+        'Tus ingresos recurrentes todavía están en una base frágil. No es un problema de tu valor o tu contenido — es que falta un proceso claro que lleve a las personas desde que te descubren hasta que pagan, de forma repetible y sin depender del impulso del momento.';
+    }
+  } else if (mrr_mes1 < 2500) {
+    if (inversionAds <= 0) {
+      lecturaHonesta =
+        'Ya tienes tracción real — eso es importante. Pero sin publicidad medida, tu crecimiento depende completamente de tu ritmo de contenido orgánico. Si un día publicas menos, los ingresos se sienten. El siguiente paso es construir un sistema que no dependa solo de ti.';
+    } else {
+      lecturaHonesta =
+        'Estás en un punto donde la publicidad ya tiene sentido. El riesgo más común aquí es cambiar todo cada semana sin saber qué está fallando realmente. Necesitas un sistema simple para medir qué anuncio funciona y qué paso del proceso de venta está frenando a los compradores.';
+    }
+  } else if (potencialDescubrimiento >= 60) {
+    lecturaHonesta =
+      'Tus números muestran un potencial de ingresos alto y buena capacidad de llegar a personas nuevas. El reto ahora es crecer sin que todo dependa de tu tiempo y energía — necesitas sistemas y automatizaciones que trabajen mientras tú te enfocas en lo que solo tú puedes hacer.';
+  } else {
+    lecturaHonesta =
+      'Tus ingresos potenciales son buenos pero tu capacidad de llegar a personas nuevas todavía es limitada. Si escalas agresivamente ahora sin resolver eso, vas a amplificar un problema que ya existe — ya sea en cómo comunicas tu oferta o en cómo atraes nuevas audiencias.';
+  }
+
+  if (riesgoRetencion >= 85 && mrr_mes1 >= 150) {
+    lecturaHonesta +=
+      ' Además, hay una señal importante de retención: si no hay una experiencia de valor constante después de la compra, los clientes de tu membresía o producto van a dejar de renovar. La venta es solo el comienzo — lo que pasa después es lo que sostiene el ingreso recurrente.';
+  }
+
+  return lecturaHonesta;
+}
+
 function computeProjection(inputs) {
   const {
     seguidores,
@@ -80,35 +128,199 @@ function computeProjection(inputs) {
   const potencialMonetizacion = clamp(Math.round(engagement * 400 + mrr_mes1 / 200), 5, 100);
   const riesgoRetencion = clamp(100 - freqScore + Math.round((1 - engagement) * 15), 5, 100);
 
+  const storyRare = freqHistorias === 'never' || freqHistorias === 'rarely';
+  const insightSeed = (seguidores + vistasReel + vistasHistoria) | 0;
+
+  const insightRules = [
+    {
+      when: inversionAds >= 300 && mrr_mes1 < 500,
+      text:
+        'Estás invirtiendo en pauta pero tus ingresos del mes 1 siguen bajos. Estás pagando por tráfico que no se convierte en clientes recurrentes. Antes de seguir gastando en publicidad, hay que revisar tu oferta y tu proceso de venta.',
+    },
+    {
+      when: mrr_mes1 < 150,
+      text:
+        'Tus ingresos estimados del primer mes son muy bajos para el tamaño de tu audiencia. El problema no es la cantidad de seguidores — es que tu oferta o tu proceso de venta no está convirtiendo. Hay que arreglar eso antes de pensar en crecer.',
+    },
+    {
+      when: engagement < 0.01 && vistasReel >= 2000,
+      text:
+        'Tus reels tienen alcance pero poca interacción real. Que alguien vea tu contenido no significa que le interese lo suficiente para comprar. Con ese nivel de engagement, vender tu membresía o producto va a ser muy difícil aunque sigas publicando más.',
+    },
+    {
+      when: ratioHist < 0.015 && storyRare,
+      text:
+        'Casi no estás usando las historias para vender y se nota en los números. Las historias son el canal que más convierte en ventas de membresías o productos digitales. Hoy ese canal está dormido y estás dejando dinero sobre la mesa.',
+    },
+    {
+      when: riesgoRetencion >= 80,
+      text:
+        'Aunque consigas clientes nuevos, hay alta probabilidad de que no se queden. Cuando tu membresía o producto no genera un hábito de valor continuo en el cliente, la compra se siente como un evento aislado y no renuevan. Hay que trabajar la experiencia post-venta.',
+    },
+    {
+      when: inversionAds > 0 && potencialMonetizacion < 35,
+      text:
+        'Tienes atención pero no la estás convirtiendo en dinero. El problema no es conseguir más seguidores — es que los que ya te siguen no están dando el paso de comprar. Escalar sin resolver eso solo va a multiplicar el problema.',
+    },
+    {
+      when: audienciaCaliente < 25,
+      text:
+        'Las personas que más probabilidad tienen de comprarte casi no están viendo tus historias. Sin esa audiencia activa en historias, vender tu membresía o producto por ese canal es prácticamente imposible por ahora.',
+    },
+    {
+      when: ratioHist < 0.02 && !(ratioHist < 0.015 && storyRare),
+      text:
+        'Pocas personas de las que te siguen están viendo tus historias. Prueba empezar cada historia con algo que genere curiosidad inmediata y termina siempre con una acción clara — una pregunta, un link o un mensaje directo.',
+    },
+    {
+      when: ratioHist >= 0.02 && ratioHist <= 0.08,
+      text:
+        'Tus historias tienen un alcance medio para el tamaño de tu audiencia. Prueba publicar 2 o 3 veces por semana con un formato fijo — una historia que genere conversación, una que invite a actuar y una que muestre resultados reales. Mide cuál de las tres genera más respuesta.',
+    },
+    {
+      when: ratioHist > 0.08,
+      text:
+        'Tus historias están funcionando bien — la gente te está viendo. Ese es tu canal más fuerte para presentar ofertas y vender tu membresía o producto. Apróvechalo con más consistencia.',
+    },
+    {
+      when: vistasReel > seguidores * 0.5,
+      text:
+        'Tus reels están atrayendo gente nueva. El siguiente paso es no dejarla ir — usa historias para darle seguimiento a ese alcance y lleva a esas personas hacia tu oferta con pasos claros y simples.',
+    },
+    {
+      when: vistasReel > seguidores * 0.12 && vistasReel <= seguidores * 0.5,
+      text:
+        'Tus reels están llegando a personas nuevas. Para convertir ese alcance en ventas necesitas una sola promesa clara en tu contenido y un siguiente paso obvio — lleva ese interés a tus historias donde puedas cerrar la venta.',
+    },
+    {
+      when: vistasReel <= seguidores * 0.08 && seguidores >= 3000,
+      text:
+        'Tus reels no están llegando tan lejos como deberían para el tamaño de tu audiencia. Enfócate en los primeros segundos del video — ahí se decide si alguien sigue viendo. Elige 3 temas que repitas con frecuencia y termina siempre pidiendo algo concreto al espectador.',
+    },
+    {
+      when: storyRare,
+      text:
+        'Vender por historias funciona cuando se hace de forma constante y con intención. Agenda días específicos para presentar tu oferta y prueba diferentes formatos para ver cuál genera más respuesta de tu audiencia.',
+    },
+    {
+      when: freqHistorias === 'sometimes',
+      text:
+        'Vender de vez en cuando por historias no es suficiente para construir ingresos estables. Elige 2 días fijos a la semana como tu momento de venta y prepara una secuencia de historias previas que genere anticipación antes de presentar tu membresía o producto.',
+    },
+    {
+      when: freqHistorias === 'often',
+      text:
+        'Ya tienes el hábito de vender por historias — eso es una ventaja real. El siguiente paso es ordenar ese proceso en una secuencia fija: primero educa, luego muestra resultados, luego presenta tu oferta. Documenta qué funciona para replicarlo sin depender de la inspiración del momento.',
+    },
+    {
+      when: inversionAds <= 0 && potencialDescubrimiento >= 60,
+      text:
+        'Tu contenido orgánico está atrayendo personas nuevas sin necesidad de publicidad pagada. Ese es el momento ideal para afinar tu oferta y tu proceso de venta. Cuando eso esté funcionando bien, la pauta va a amplificar resultados reales en lugar de gastos sin retorno.',
+    },
+    {
+      when: inversionAds <= 0 && potencialDescubrimiento < 60,
+      text:
+        'Una inversión pequeña y bien dirigida en publicidad puede ayudarte a llegar a más personas sin depender únicamente de tu contenido orgánico. No necesitas un gran presupuesto — necesitas el mensaje correcto para la persona correcta.',
+    },
+    {
+      when: inversionAds > 0 && potencialDescubrimiento < 50,
+      text:
+        'Estás invirtiendo en publicidad pero no estás llegando a suficientes personas nuevas. El problema casi nunca es el presupuesto — es el mensaje o el público al que le estás mostrando el anuncio. Hay que revisar ambos antes de aumentar la inversión.',
+    },
+    {
+      when: engagement < 0.02,
+      text:
+        'Tus reels tienen alcance pero poca gente interactúa con ellos. Prueba empezar con una apertura más directa, reduce el texto en pantalla y enfócate en una sola idea por video. La simplicidad convierte mejor que el contenido sobrecargado.',
+    },
+    {
+      when: engagement >= 0.06,
+      text:
+        'Tu audiencia interactúa bien con tu contenido — eso es una señal muy positiva. Ahora hay que convertir ese interés en ventas concretas. Asegúrate de tener un link claro en tu bio, usa stickers de enlace en historias y ten un mensaje listo para responder a quienes te escriban con intención de compra.',
+    },
+    {
+      when: publicacionesSem <= 2,
+      text:
+        'Publicar poco le da al algoritmo pocas señales para distribuir tu contenido. Define un mínimo semanal que puedas mantener — 3 piezas es un buen punto de partida — y cuando encuentres un formato que funcione, repítelo con variaciones en lugar de inventar algo nuevo cada vez.',
+    },
+    {
+      when: publicacionesSem >= 9,
+      text:
+        'Estás publicando bastante, lo cual es positivo. Para que ese esfuerzo se traduzca en ventas, separa tu contenido en dos tipos — el que construye tu marca y el que vende directamente. Protege días específicos de la semana exclusivamente para presentar tu membresía o producto.',
+    },
+    {
+      when: precioMembresia < 20,
+      text:
+        'Tu precio actual es bajo, lo que significa que necesitas muchos clientes para generar ingresos significativos. Trabaja en subir el valor por cliente — un plan anual con descuento, un servicio adicional o un producto complementario pueden aumentar tus ingresos sin necesitar más compradores nuevos.',
+    },
+    {
+      when: precioMembresia >= 79,
+      text:
+        'Con un precio alto, el cliente necesita confiar mucho antes de comprar. Asegúrate de tener testimonios reales y visibles, una garantía clara y una bienvenida post-compra que haga sentir al cliente que tomó la mejor decisión desde el primer momento.',
+    },
+    {
+      when: riesgoRetencion >= 70 && riesgoRetencion < 80,
+      text:
+        'Hay señales de que tus clientes podrían no renovar o quedarse. Para evitarlo, mantén presencia constante en historias y comunícate regularmente con quienes ya compraron — recuérdales el valor que están recibiendo para que la membresía o producto se sienta como algo indispensable y no como una compra ocasional.',
+    },
+  ];
+
   const insights = [];
-  if (ratioHist < 0.02) {
-    insights.push(
-      'Tu ratio vistas/historia vs. seguidores tiene margen de mejora: prueba ganchos más claros y CTAs en historias.'
-    );
-  } else if (ratioHist > 0.08) {
-    insights.push('Tienes buena atención en historias: es un canal fuerte para ofertas y membresía.');
-  }
-  if (vistasReel > seguidores * 0.5) {
-    insights.push('Tus reels aportan alcance: convierte esa atención con enlaces y secuencias en historias.');
-  }
-  if (freqHistorias === 'never' || freqHistorias === 'rarely') {
-    insights.push('Vender más por historias suele requerir constancia: agenda ofertas y pruebas A/B en formato historia.');
-  }
-  if (inversionAds <= 0 && potencialDescubrimiento < 60) {
-    insights.push('Una inversión acotada en pauta puede acelerar el descubrimiento sin depender solo del orgánico.');
-  }
-  if (insights.length < 2) {
-    insights.push(
-      'Tu precio de membresía y la proyección muestran un camino claro: el siguiente paso es ordenar embudo y oferta.'
-    );
+  const seen = new Set();
+  for (const rule of insightRules) {
+    if (insights.length >= 4) break;
+    if (!rule.when) continue;
+    const text = rule.text;
+    if (!text || seen.has(text)) continue;
+    seen.add(text);
+    insights.push(text);
   }
 
-  const siguientePaso =
-    mrr_mes1 < 500
-      ? 'Prioriza clarificar tu promesa de membresía y un embudo simple (historias → landing → pago) antes de escalar pauta.'
-      : mrr_mes1 < 2500
-        ? 'Tienes base para escalar: sistematiza contenido, automatiza seguimiento y prueba pauta con creatividades de historias/reels.'
-        : 'Tu techo de MRR inicial es alto: conviene un sistema completo de pauta, automatizaciones y optimización mensual.';
+  if (insights.length < 2) {
+    const fallbackA =
+      'Tu precio y tu proyección de ingresos muestran que hay un camino real aquí. El siguiente paso es ordenar cómo presentas tu oferta y cómo llevas a las personas desde que te descubren hasta que compran.';
+    const fallbackB =
+      'Tus números indican que antes de sumar más canales o estrategias, lo que más va a mover tus ingresos es ordenar lo básico — una sola oferta clara, una página donde se pueda comprar y un ritual semanal de historias dedicado a vender.';
+    const pick = insightSeed % 2 === 0 ? fallbackA : fallbackB;
+    if (!seen.has(pick)) {
+      seen.add(pick);
+      insights.push(pick);
+    } else if (!seen.has(fallbackA)) {
+      insights.push(fallbackA);
+    } else {
+      insights.push(fallbackB);
+    }
+  }
+
+  let siguientePaso;
+  if (mrr_mes1 < 150) {
+    siguientePaso =
+      'Trata esto como una alerta urgente. Antes de invertir más tiempo o dinero en crecer, valida que tu oferta conecta, que el proceso de pago funciona sin fricción y que tu mensaje es claro para quien llega por primera vez. Sin eso, escalar solo amplifica el problema.';
+  } else if (inversionAds >= 300 && mrr_mes1 < 500) {
+    siguientePaso =
+      'Considera pausar o reducir la pauta por ahora. Primero construye una oferta clara, una página donde se pueda comprar y una secuencia de historias que ya haya demostrado generar ventas. Hoy estás pagando por tráfico que no tiene a dónde ir.';
+  } else if (mrr_mes1 < 500) {
+    siguientePaso = storyRare
+      ? 'El primer paso es crear un ritual semanal de historias donde presentes tu membresía o producto con claridad y consistencia. Al mismo tiempo, construye una página simple con una sola promesa. No escales la publicidad hasta que ese proceso esté generando ventas de forma estable.'
+      : 'Antes de invertir en publicidad, deja muy claro qué ofreces y para quién. Luego construye un camino simple: historias que generen interés → una página que explique la oferta → un proceso de pago sin fricción. Cuando eso funcione, la pauta va a multiplicar resultados reales.';
+  } else if (mrr_mes1 < 2500) {
+    siguientePaso =
+      inversionAds <= 0
+        ? 'Ya tienes una base real para crecer. El siguiente paso es sistematizar tu contenido para que no dependa de tu estado de ánimo del día, y automatizar el seguimiento de personas interesadas. Cuando el orgánico esté convirtiendo de forma estable, usa tus mejores historias y reels como base para tus anuncios pagados.'
+        : 'Tienes base para crecer con publicidad. Pero necesitas un sistema simple para medir qué está funcionando — desde el anuncio hasta la compra. Cambia las creatividades con frecuencia para no quemarte, pero no toques el proceso de venta cada semana. La estabilidad del embudo es lo que permite leer bien los datos.';
+  } else {
+    siguientePaso =
+      potencialDescubrimiento >= 60
+        ? 'Tu potencial de ingresos es alto. Para llegar a ese techo necesitas un sistema completo — publicidad bien dirigida, automatizaciones que atiendan a los interesados y un proceso de venta que se mantenga estable aunque el volumen crezca. El foco ahora es escalar sin perder la conversión que ya tienes.'
+        : 'Tu potencial de ingresos es alto, pero todavía no estás llegando a suficientes personas nuevas. Antes de aumentar el presupuesto en publicidad, trabaja en cómo comunicas tu oferta y en qué tipo de contenido atrae a personas que no te conocen. Eso primero — la pauta después.';
+  }
+
+  const lecturaHonesta = buildFluxaDiagnostico({
+    mrr_mes1,
+    inversionAds,
+    potencialDescubrimiento,
+    storyRare,
+    riesgoRetencion,
+  });
 
   return {
     nuevos_miembros_mes1,
@@ -129,6 +341,7 @@ function computeProjection(inputs) {
     },
     insights: insights.slice(0, 4),
     siguientePaso,
+    lecturaHonesta,
   };
 }
 
@@ -919,6 +1132,9 @@ export default function DiagnosticoPage() {
   }, [ctaIO]);
 
   const showResult = useCallback(() => {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead');
+    }
     const r = computeProjection({ ...inputs, freqHistorias: storyFreq });
     setFrozenResult(r);
     setHeroIn(false);
@@ -931,6 +1147,17 @@ export default function DiagnosticoPage() {
     setPhase('loading');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [inputs, storyFreq]);
+
+  const openCalendly = useCallback(() => {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Schedule');
+    }
+    if (window.Calendly) {
+      window.Calendly.initPopupWidget({
+        url: 'https://calendly.com/fluxasystems1/30min',
+      });
+    }
+  }, []);
 
   const resetAll = useCallback(() => {
     setPhase('form');
@@ -1438,7 +1665,7 @@ export default function DiagnosticoPage() {
                   className={'dg-card dg-insights-card' + (insightsCardIn ? ' dg-insights-card--in' : '')}
                   ref={insightsBlockRef}
                 >
-                  <h3 className="dg-block-title">Insights personalizados</h3>
+                  <h3 className="dg-block-title">Analisis Personalizado</h3>
                   <ul className="dg-insights">
                     {res.insights.map((t, i) => (
                       <li key={t} className={i < insightItemsIn ? 'dg-insight-li--in' : ''}>
@@ -1449,7 +1676,11 @@ export default function DiagnosticoPage() {
                 </div>
 
                 <div className={'dg-card dg-next-card' + (nextCardIn ? ' dg-next-card--in' : '')} ref={nextBlockRef}>
-                  <h3 className="dg-block-title">Tu siguiente paso recomendado</h3>
+                  <h3 className="dg-block-title">Diagnostico Personalizado</h3>
+                  <p className="dg-fluxa-kicker">Qué dicen tus números</p>
+                  <p className="dg-fluxa-honest">{res.lecturaHonesta}</p>
+                  <div className="dg-next-rule" aria-hidden />
+                  <p className="dg-fluxa-kicker">Tu siguiente paso recomendado</p>
                   <p className="dg-next">{res.siguientePaso}</p>
                 </div>
 
@@ -1467,13 +1698,7 @@ export default function DiagnosticoPage() {
                   <button
                     type="button"
                     className="dg-btn dg-btn--primary dg-btn--block dg-btn--cta-glow"
-                    onClick={() => {
-                      if (window.Calendly) {
-                        window.Calendly.initPopupWidget({
-                          url: 'https://calendly.com/fluxasystems1/30min',
-                        });
-                      }
-                    }}
+                    onClick={openCalendly}
                     aria-label="Agendar videollamada gratuita en Calendly"
                   >
                     Agendar videollamada gratuita →
