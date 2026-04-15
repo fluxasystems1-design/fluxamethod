@@ -367,8 +367,153 @@ function pathPointAtT(pts, t) {
   return { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u };
 }
 
-function OptCheck() {
-  return <span className="dg-opt-check">{'\u2713'}</span>;
+const STEP_NUMERIC_FIELD_IDS = {
+  0: ['seguidores', 'vistasHistoria'],
+  1: ['vistasReel', 'likesPub'],
+  2: ['precioMembresia'],
+  3: ['inversionAds', 'publicacionesSem'],
+};
+
+function FieldAlertInline() {
+  return (
+    <div className="dg-field-alert" role="alert">
+      <span className="dg-field-alert__icon" aria-hidden>
+        ⚠
+      </span>
+      <span className="dg-field-alert__text">
+        Por favor completa este campo antes de continuar. Si no tienes el dato exacto puedes dejarlo en 0.
+      </span>
+    </div>
+  );
+}
+
+function DgFormNumericRow({
+  fieldId,
+  value,
+  onChange,
+  min,
+  max,
+  variant = 'plain',
+  registerFieldValidator,
+  showAlert,
+  onDismissAlert,
+  ariaLabel,
+}) {
+  const [focused, setFocused] = useState(false);
+  const [draft, setDraft] = useState(null);
+
+  useEffect(() => {
+    return registerFieldValidator(fieldId, () => focused && draft === '');
+  }, [fieldId, registerFieldValidator, focused, draft]);
+
+  const committed = Math.round(Number(value)) || 0;
+  const displayStr = !focused
+    ? formatNum(committed)
+    : draft !== null && draft !== undefined
+      ? draft
+      : formatNum(committed);
+
+  const parseDigitsToInt = (s) => {
+    const d = String(s).replace(/\D/g, '');
+    if (!d) return NaN;
+    const n = parseInt(d, 10);
+    return Number.isFinite(n) ? n : NaN;
+  };
+
+  const handleFocus = () => {
+    setFocused(true);
+    setDraft(formatNum(committed));
+    onDismissAlert?.();
+  };
+
+  const handleBlur = () => {
+    let next = 0;
+    if (draft === '' || draft === null || draft === undefined) {
+      next = 0;
+    } else {
+      const n = parseDigitsToInt(draft);
+      next = Number.isNaN(n) ? 0 : clamp(n, min, max);
+    }
+    onChange(next);
+    setFocused(false);
+    setDraft(null);
+  };
+
+  const handleChange = (e) => {
+    const raw = e.target.value;
+    const digits = raw.replace(/\D/g, '');
+    onDismissAlert?.();
+    if (!digits) {
+      setDraft('');
+      onChange(0);
+      return;
+    }
+    let n = parseInt(digits, 10);
+    if (!Number.isFinite(n)) return;
+    n = clamp(n, min, max);
+    setDraft(formatNum(n));
+    onChange(n);
+  };
+
+  const bump = (delta) => {
+    const next = clamp(committed + delta, min, max);
+    onChange(next);
+    onDismissAlert?.();
+    if (focused) setDraft(formatNum(next));
+  };
+
+  return (
+    <div className="dg-num-block">
+      <div className="dg-num-row">
+        <button
+          type="button"
+          className="dg-num-btn"
+          onClick={() => bump(-1)}
+          aria-label={`Disminuir ${ariaLabel}`}
+        >
+          −
+        </button>
+        <div
+          className={
+            'dg-num-field' +
+            (variant === 'money' ? ' dg-num-field--money' : '') +
+            (variant === 'seguidores' ? ' dg-num-field--seguidores' : '')
+          }
+        >
+          {variant === 'money' && (
+            <span className="dg-num-prefix" aria-hidden>
+              $
+            </span>
+          )}
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            className="dg-num-input"
+            value={displayStr}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            aria-label={ariaLabel}
+          />
+          {variant === 'seguidores' && (
+            <span className="dg-num-suffix" aria-hidden>
+              seg.
+            </span>
+          )}
+        </div>
+        <button
+          type="button"
+          className="dg-num-btn"
+          onClick={() => bump(1)}
+          aria-label={`Aumentar ${ariaLabel}`}
+        >
+          +
+        </button>
+      </div>
+      {showAlert ? <FieldAlertInline /> : null}
+    </div>
+  );
 }
 
 function useIntersectionOnce(refObject, enabled) {
@@ -933,6 +1078,7 @@ export default function DiagnosticoPage() {
   const [heroIn, setHeroIn] = useState(false);
   const [tableRowsIn, setTableRowsIn] = useState(0);
   const [tableTotalsPlay, setTableTotalsPlay] = useState(false);
+  const [tableHintVisible, setTableHintVisible] = useState(true);
   const [diagPhase, setDiagPhase] = useState(0);
   const [diagWidths, setDiagWidths] = useState([0, 0, 0, 0]);
   const [diagNums, setDiagNums] = useState([0, 0, 0, 0]);
@@ -941,6 +1087,22 @@ export default function DiagnosticoPage() {
   const [insightsCardIn, setInsightsCardIn] = useState(false);
   const [nextCardIn, setNextCardIn] = useState(false);
   const [ctaIn, setCtaIn] = useState(false);
+
+  const fieldValidatorsRef = useRef({});
+  const [fieldAlert, setFieldAlert] = useState(null);
+
+  const registerFieldValidator = useCallback((id, getBlocking) => {
+    fieldValidatorsRef.current[id] = getBlocking;
+    return () => {
+      delete fieldValidatorsRef.current[id];
+    };
+  }, []);
+
+  const clearFieldAlert = useCallback(() => setFieldAlert(null), []);
+
+  useEffect(() => {
+    setFieldAlert(null);
+  }, [step]);
 
   const inputs = useMemo(
     () => ({
@@ -1148,6 +1310,33 @@ export default function DiagnosticoPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [inputs, storyFreq]);
 
+  const tryAdvanceNext = useCallback(() => {
+    const ids = STEP_NUMERIC_FIELD_IDS[step] || [];
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (fieldValidatorsRef.current[id]?.()) {
+        setFieldAlert(id);
+        return;
+      }
+    }
+    setFieldAlert(null);
+    goStep(step + 1);
+  }, [step, goStep]);
+
+  const trySubmitProjection = useCallback(() => {
+    const ids = STEP_NUMERIC_FIELD_IDS[3] || [];
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (fieldValidatorsRef.current[id]?.()) {
+        setFieldAlert(id);
+        return;
+      }
+    }
+    setFieldAlert(null);
+    if (!storyFreq) return;
+    showResult();
+  }, [storyFreq, showResult]);
+
   const openCalendly = useCallback(() => {
     if (typeof window !== 'undefined' && window.fbq) {
       window.fbq('track', 'Schedule');
@@ -1175,12 +1364,15 @@ export default function DiagnosticoPage() {
     setLoadingExit(false);
     setResultReveal(false);
     setHeroIn(false);
+    setFieldAlert(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const pct = (v, min, max) => `${((v - min) / (max - min)) * 100}%`;
-  const numInputWidth = (v, minChars = 3) =>
-    `${Math.max(String(Math.abs(Number(v) || 0)).length, minChars) + 2}ch`;
+  const pct = (v, min, max) => {
+    if (max <= min) return '0%';
+    const x = clamp(Number(v) || 0, min, max);
+    return `${((x - min) / (max - min)) * 100}%`;
+  };
 
   const res = frozenResult;
   const mrrProb = res?.probable;
@@ -1313,46 +1505,28 @@ export default function DiagnosticoPage() {
                         max={500000}
                         step={1}
                         value={seguidores}
-                        onInput={(e) => setSeguidores(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setSeguidores(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setSeguidores(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setSeguidores((prev) => clamp(prev - 1, 0, 500000))}
-                          aria-label="Disminuir número de seguidores"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={500000}
-                          step={1}
-                          style={{ width: numInputWidth(seguidores, 4) }}
-                          value={seguidores}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setSeguidores(clamp(v, 0, 500000));
-                          }}
-                          aria-label="Número de seguidores"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setSeguidores((prev) => clamp(prev + 1, 0, 500000))}
-                          aria-label="Aumentar número de seguidores"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">
+                      La mayoría de creadores tiene entre 1.000 y 100.000 seguidores
+                    </p>
+                    <DgFormNumericRow
+                      fieldId="seguidores"
+                      value={seguidores}
+                      onChange={setSeguidores}
+                      min={0}
+                      max={500000}
+                      variant="seguidores"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'seguidores'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Número de seguidores"
+                    />
                   </div>
                   <div>
                     <p className="dg-q">Vistas promedio por historia</p>
@@ -1364,46 +1538,26 @@ export default function DiagnosticoPage() {
                         max={100000}
                         step={1}
                         value={vistasHistoria}
-                        onInput={(e) => setVistasHistoria(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setVistasHistoria(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setVistasHistoria(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setVistasHistoria((prev) => clamp(prev - 1, 0, 100000))}
-                          aria-label="Disminuir vistas por historia"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={100000}
-                          step={1}
-                          style={{ width: numInputWidth(vistasHistoria, 3) }}
-                          value={vistasHistoria}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setVistasHistoria(clamp(v, 0, 100000));
-                          }}
-                          aria-label="Vistas promedio por historia"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setVistasHistoria((prev) => clamp(prev + 1, 0, 100000))}
-                          aria-label="Aumentar vistas por historia"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Promedio normal: 5% a 15% de tus seguidores</p>
+                    <DgFormNumericRow
+                      fieldId="vistasHistoria"
+                      value={vistasHistoria}
+                      onChange={setVistasHistoria}
+                      min={0}
+                      max={100000}
+                      variant="plain"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'vistasHistoria'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Vistas promedio por historia"
+                    />
                   </div>
                 </div>
               )}
@@ -1427,46 +1581,26 @@ export default function DiagnosticoPage() {
                         max={500000}
                         step={1}
                         value={vistasReel}
-                        onInput={(e) => setVistasReel(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setVistasReel(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setVistasReel(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setVistasReel((prev) => clamp(prev - 1, 0, 500000))}
-                          aria-label="Disminuir vistas por reel"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={500000}
-                          step={1}
-                          style={{ width: numInputWidth(vistasReel, 3) }}
-                          value={vistasReel}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setVistasReel(clamp(v, 0, 500000));
-                          }}
-                          aria-label="Vistas promedio por reel"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setVistasReel((prev) => clamp(prev + 1, 0, 500000))}
-                          aria-label="Aumentar vistas por reel"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Un reel promedio tiene entre 500 y 50.000 vistas</p>
+                    <DgFormNumericRow
+                      fieldId="vistasReel"
+                      value={vistasReel}
+                      onChange={setVistasReel}
+                      min={0}
+                      max={500000}
+                      variant="plain"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'vistasReel'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Vistas promedio por reel"
+                    />
                   </div>
                   <div>
                     <p className="dg-q">Likes promedio por publicación</p>
@@ -1478,46 +1612,26 @@ export default function DiagnosticoPage() {
                         max={50000}
                         step={1}
                         value={likesPub}
-                        onInput={(e) => setLikesPub(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setLikesPub(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setLikesPub(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setLikesPub((prev) => clamp(prev - 1, 0, 50000))}
-                          aria-label="Disminuir likes promedio por publicación"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={50000}
-                          step={1}
-                          style={{ width: numInputWidth(likesPub, 2) }}
-                          value={likesPub}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setLikesPub(clamp(v, 0, 50000));
-                          }}
-                          aria-label="Likes promedio por publicación"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setLikesPub((prev) => clamp(prev + 1, 0, 50000))}
-                          aria-label="Aumentar likes promedio por publicación"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Engagement normal: 1% a 3% de tus vistas</p>
+                    <DgFormNumericRow
+                      fieldId="likesPub"
+                      value={likesPub}
+                      onChange={setLikesPub}
+                      min={0}
+                      max={50000}
+                      variant="plain"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'likesPub'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Likes promedio por publicación"
+                    />
                   </div>
                 </div>
               )}
@@ -1541,46 +1655,26 @@ export default function DiagnosticoPage() {
                         max={500}
                         step={1}
                         value={precioMembresia}
-                        onInput={(e) => setPrecioMembresia(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setPrecioMembresia(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setPrecioMembresia(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setPrecioMembresia((prev) => clamp(prev - 1, 0, 500))}
-                          aria-label="Disminuir precio promedio"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={500}
-                          step={1}
-                          style={{ width: numInputWidth(precioMembresia, 2) }}
-                          value={precioMembresia}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setPrecioMembresia(clamp(v, 0, 500));
-                          }}
-                          aria-label="Precio promedio de tu producto o servicio"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setPrecioMembresia((prev) => clamp(prev + 1, 0, 500))}
-                          aria-label="Aumentar precio promedio"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Precio en USD — Ej: $29, $97, $197</p>
+                    <DgFormNumericRow
+                      fieldId="precioMembresia"
+                      value={precioMembresia}
+                      onChange={setPrecioMembresia}
+                      min={0}
+                      max={500}
+                      variant="money"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'precioMembresia'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Precio promedio de tu producto o servicio en USD"
+                    />
                   </div>
                 </div>
               )}
@@ -1604,46 +1698,26 @@ export default function DiagnosticoPage() {
                         max={10000}
                         step={1}
                         value={inversionAds}
-                        onInput={(e) => setInversionAds(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setInversionAds(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setInversionAds(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setInversionAds((prev) => clamp(prev - 1, 0, 10000))}
-                          aria-label="Disminuir inversión mensual en ads"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={10000}
-                          step={1}
-                          style={{ width: numInputWidth(inversionAds, 2) }}
-                          value={inversionAds}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setInversionAds(clamp(v, 0, 10000));
-                          }}
-                          aria-label="Inversión mensual en ads"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setInversionAds((prev) => clamp(prev + 1, 0, 10000))}
-                          aria-label="Aumentar inversión mensual en ads"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Puedes empezar desde $50 USD/mes</p>
+                    <DgFormNumericRow
+                      fieldId="inversionAds"
+                      value={inversionAds}
+                      onChange={setInversionAds}
+                      min={0}
+                      max={10000}
+                      variant="money"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'inversionAds'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Inversión mensual en ads USD"
+                    />
                   </div>
                   <div>
                     <p className="dg-q">¿Con qué frecuencia vendes por historias?</p>
@@ -1653,10 +1727,13 @@ export default function DiagnosticoPage() {
                           key={o.id}
                           type="button"
                           className={'dg-opt' + (storyFreq === o.id ? ' dg-opt--selected' : '')}
-                          onClick={() => setStoryFreq((p) => (p === o.id ? null : o.id))}
+                          onClick={() => {
+                            clearFieldAlert();
+                            setStoryFreq((p) => (p === o.id ? null : o.id));
+                          }}
                         >
-                          {storyFreq === o.id && <OptCheck />}
-                          {o.label}
+                          <span className="dg-opt-label">{o.label}</span>
+                          {storyFreq === o.id ? <span className="dg-opt-check dg-opt-check--trailing">{'\u2713'}</span> : null}
                         </button>
                       ))}
                     </div>
@@ -1671,46 +1748,26 @@ export default function DiagnosticoPage() {
                         max={14}
                         step={1}
                         value={publicacionesSem}
-                        onInput={(e) => setPublicacionesSem(Number(e.currentTarget.value))}
+                        onInput={(e) => {
+                          clearFieldAlert();
+                          setPublicacionesSem(Number(e.currentTarget.value));
+                        }}
                         onChange={(e) => setPublicacionesSem(Number(e.target.value))}
                       />
                     </div>
-                    <div className="dg-slider-label-row" style={{ marginTop: 6 }}>
-                      <span />
-                      <div className="dg-slider-control">
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setPublicacionesSem((prev) => clamp(prev - 1, 0, 14))}
-                          aria-label="Disminuir publicaciones por semana"
-                        >
-                          -
-                        </button>
-                        <input
-                          type="number"
-                          className="dg-slider-val-input"
-                          min={0}
-                          max={14}
-                          step={1}
-                          style={{ width: numInputWidth(publicacionesSem, 2) }}
-                          value={publicacionesSem}
-                          onChange={(e) => {
-                            const v = Number(e.currentTarget.value);
-                            if (Number.isNaN(v)) return;
-                            setPublicacionesSem(clamp(v, 0, 14));
-                          }}
-                          aria-label="Publicaciones por semana"
-                        />
-                        <button
-                          type="button"
-                          className="dg-slider-btn"
-                          onClick={() => setPublicacionesSem((prev) => clamp(prev + 1, 0, 14))}
-                          aria-label="Aumentar publicaciones por semana"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
+                    <p className="dg-slider-hint">Lo ideal es entre 3 y 7 publicaciones</p>
+                    <DgFormNumericRow
+                      fieldId="publicacionesSem"
+                      value={publicacionesSem}
+                      onChange={setPublicacionesSem}
+                      min={0}
+                      max={14}
+                      variant="plain"
+                      registerFieldValidator={registerFieldValidator}
+                      showAlert={fieldAlert === 'publicacionesSem'}
+                      onDismissAlert={clearFieldAlert}
+                      ariaLabel="Publicaciones por semana"
+                    />
                   </div>
                   {liveMrrMes1 != null && (
                     <p className="dg-live-preview">
@@ -1731,17 +1788,17 @@ export default function DiagnosticoPage() {
                   <span />
                 )}
                 {step < 3 ? (
-                  <button type="button" className="dg-btn dg-btn--primary" onClick={() => goStep(step + 1)}>
+                  <button type="button" className="dg-btn dg-btn--primary" onClick={tryAdvanceNext}>
                     Siguiente
                   </button>
                 ) : (
                   <button
                     type="button"
-                    className="dg-btn dg-btn--primary"
+                    className="dg-btn dg-btn--primary dg-btn--projection"
                     disabled={!stepValid}
-                    onClick={showResult}
+                    onClick={trySubmitProjection}
                   >
-                    Ver mi proyección
+                    Ver mi proyección →
                   </button>
                 )}
               </div>
@@ -1803,7 +1860,14 @@ export default function DiagnosticoPage() {
 
                 <div className={'dg-card dg-table-block' + (tableIO ? ' dg-table-block--in' : '')} ref={tableBlockRef}>
                   <h3 className="dg-block-title">Comparativa de escenarios</h3>
-                  <div className="dg-table-wrap">
+
+                  <div className={'dg-table-hint' + (!tableHintVisible ? ' dg-table-hint--hidden' : '')}>
+                    <span className="dg-table-hint__arrow">←</span>
+                    <span>Desliza para ver más</span>
+                    <span className="dg-table-hint__arrow">→</span>
+                  </div>
+
+                  <div className="dg-table-wrap" onScroll={() => setTableHintVisible(false)}>
                     <table className="dg-table">
                       <thead>
                         <tr>
