@@ -1,0 +1,26 @@
+.root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.fadeWrap {
+  width: 100%;
+  height: 100%;
+}
+
+.motionLayer {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
