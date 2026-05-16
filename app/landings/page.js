@@ -1,16 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Check, Minus, Rocket, Building2, ShoppingCart } from 'lucide-react';
 import createGlobe from 'cobe';
-import { ContainerScroll } from './ContainerScroll';
 import { FallingPattern } from './FallingPattern';
 import styles from './page.module.css';
 
 const WA_PRIMARY =
   'https://api.whatsapp.com/message/SEVUH3LFWHLUE1?autoload=1&app_absent=0';
-
-const CRAV_SITE_URL = 'https://www.cravburgers.shop';
-const CRAV_TABLET_PREVIEW_IMG = '/imagenes/hamburgeusa.png';
 
 const INCLUDE_CARDS = [
   { icon: '📱', title: 'Responsive', text: 'Se ve perfecto en celular y computador' },
@@ -55,19 +52,113 @@ const PROCESS_STEPS = [
   { icon: '🚀', title: 'Publicamos', text: 'Lista en máximo 3 días' },
 ];
 
-const TRUST_PILLS = [
-  { icon: '⚡', text: 'Hasta 3 días hábiles' },
-  { icon: '👀', text: 'Ves el diseño antes de publicar' },
-  { icon: '💬', text: 'Todo el flujo por WhatsApp' },
-  { icon: '🔄', text: 'Un ajuste incluido' },
+const HERO_MICRO_CARDS = [
+  { icon: '⚡', title: 'Entrega en 3 días', sub: 'Máximo 3 días hábiles' },
+  { icon: '👁️', title: 'Ves el diseño primero', sub: 'Apruebas antes de publicar' },
+  { icon: '💬', title: 'Todo por WhatsApp', sub: 'Sin reuniones ni formularios' },
+  { icon: '🔄', title: 'Un ajuste incluido', sub: 'Sin costo adicional' },
 ];
 
-const HOME_TESTIMONIAL = {
-  quote:
-    'Necesitábamos salir rápido con algo que se viera serio. Fue directo: propuesta clara, ajustamos detalles por WhatsApp y en pocos días ya teníamos el enlace para compartir.',
-  name: 'Laura R.',
-  role: 'Emprendedora · Bogotá',
-};
+const WA_LANDING_PLAN_TABLE = 'https://wa.me/573001234567';
+
+const PRICING_FEATURE_ROWS = [
+  { label: 'Diseño personalizado', l: 'check', i: 'check', e: 'check' },
+  { label: '100% responsive', l: 'check', i: 'check', e: 'check' },
+  { label: 'Formulario de contacto', l: 'check', i: 'check', e: 'check' },
+  { label: 'Botón WhatsApp flotante', l: 'check', i: 'check', e: 'check' },
+  { label: 'SEO básico incluido', l: 'check', i: 'check', e: 'check' },
+  { label: 'Entrega en 3 días', l: 'check', i: 'minus', e: 'minus' },
+  { label: 'Múltiples páginas', l: 'minus', i: 'check', e: 'check' },
+  { label: 'Blog / noticias', l: 'minus', i: 'check', e: 'check' },
+  { label: 'Panel de administración', l: 'minus', i: 'check', e: 'check' },
+  { label: 'Carrito de compras', l: 'minus', i: 'minus', e: 'check' },
+  { label: 'Pasarela de pagos (Wompi)', l: 'minus', i: 'minus', e: 'check' },
+  { label: 'Soporte post-entrega', l: 'minus', i: '15 días', e: '30 días' },
+];
+
+const PRICING_MOBILE_STACK = [
+  {
+    key: 'landing',
+    featured: true,
+    name: 'Landing',
+    planBadge: 'El más popular',
+    icon: Rocket,
+    priceMain: '$200.000',
+    priceStruck: '$350.000',
+    featuresList: [
+      'Diseño personalizado',
+      '100% responsive',
+      'Formulario de contacto',
+      'Botón WhatsApp flotante',
+      'SEO básico',
+      'Entrega en 3 días',
+      'Un ajuste incluido',
+    ],
+    ctaGreen: true,
+    ctaHref: WA_LANDING_PLAN_TABLE,
+    ctaLabel: 'Escribir por WhatsApp →',
+  },
+  {
+    key: 'institucional',
+    featured: false,
+    name: 'Institucional',
+    planBadge: 'Para empresas',
+    icon: Building2,
+    priceMain: 'Desde $800.000',
+    priceStruck: '$1.500.000',
+    featuresList: [
+      'Diseño personalizado',
+      '100% responsive',
+      'Múltiples páginas',
+      'Blog / noticias',
+      'Panel de administración',
+      'SEO básico',
+      'Soporte 15 días',
+    ],
+    ctaGreen: false,
+    ctaHref: WA_PRIMARY,
+    ctaLabel: 'Cotizar →',
+  },
+  {
+    key: 'ecommerce',
+    featured: false,
+    name: 'Ecommerce',
+    planBadge: 'Tienda completa',
+    icon: ShoppingCart,
+    priceMain: 'Desde $1.500.000',
+    priceStruck: '$2.500.000',
+    featuresList: [
+      'Diseño personalizado',
+      '100% responsive',
+      'Carrito de compras',
+      'Pasarela de pagos (Wompi)',
+      'Panel de administración',
+      'SEO básico',
+      'Soporte 30 días',
+    ],
+    ctaGreen: false,
+    ctaHref: WA_PRIMARY,
+    ctaLabel: 'Cotizar →',
+  },
+];
+
+function renderPricingCell(value) {
+  if (value === 'check') {
+    return (
+      <span style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Check size={14} color="#22c55e" strokeWidth={2.5} aria-hidden />
+      </span>
+    );
+  }
+  if (value === 'minus') {
+    return (
+      <span style={{ display: 'inline-flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Minus size={14} color="#475569" aria-hidden />
+      </span>
+    );
+  }
+  return <span style={{ fontSize: 12, color: '#94a3b8' }}>{value}</span>;
+}
 
 function CobeGlobePulse() {
   var canvasRef = useRef(null);
@@ -163,24 +254,6 @@ function GlobeWithPins() {
         </div>
       </div>
       <CobeGlobePulse />
-    </div>
-  );
-}
-
-/** Captura del sitio dentro del marco tablet (sin iframe = sin redirecciones). */
-function HeroTabletPreview() {
-  return (
-    <div className={styles.heroTabletFrame}>
-      <div className={styles.heroTabletImageWrap}>
-        <img
-          src={CRAV_TABLET_PREVIEW_IMG}
-          alt="Vista previa del sitio CRAV Burgers"
-          className={styles.heroTabletImage}
-          width={1200}
-          height={780}
-          draggable={false}
-        />
-      </div>
     </div>
   );
 }
@@ -323,6 +396,7 @@ function OrbitIconsField() {
 export default function LandingsPage() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [responsiveView, setResponsiveView] = useState('desktop');
   const intervalRef = useRef(null);
   const heroSectionRef = useRef(null);
   const heroCanvasRef = useRef(null);
@@ -357,7 +431,7 @@ export default function LandingsPage() {
     var frameId = 0;
 
     function buildLines(w, h) {
-      var count = Math.max(32, Math.min(160, Math.floor((w * h) / 9000)));
+      var count = Math.max(48, Math.min(240, Math.floor((w * h) / 4500)));
       var arr = [];
       var i;
       for (i = 0; i < count; i++) {
@@ -402,7 +476,7 @@ export default function LandingsPage() {
           L.x = Math.random() * w;
           L.speed = 1 + Math.random() * 4.2;
         }
-        ctx.strokeStyle = 'rgba(124,58,237,0.15)';
+        ctx.strokeStyle = 'rgba(124,58,237,0.35)';
         ctx.lineWidth = L.lw;
         ctx.beginPath();
         ctx.moveTo(L.x, L.y);
@@ -444,58 +518,67 @@ export default function LandingsPage() {
           <div className={styles.heroCanvasOverlay} aria-hidden="true" />
 
           <div className={styles.heroInner}>
-            <div className={styles.heroScrollSlot}>
-              <ContainerScroll
-                titleComponent={
-                  <div>
-                    <p className={styles.heroBadge}>⚡ Entrega en máximo 3 días</p>
-                    <h1 className={styles.heroTitle}>
-                      Tu negocio necesita
-                      <br />
-                      <span className={styles.heroTitleLine2}>
-                        una página <span className={styles.heroTitleGradient}>que venda</span>
-                      </span>
-                    </h1>
-                    <p className={styles.heroScrollCaption}>
-                      Una página pensada para convertir visitas en ventas — en celular y en escritorio.
-                    </p>
-                  </div>
-                }
-              >
-                <div className={styles.tabletScrollInner}>
-                  <div className={styles.deviceChrome}>
-                    <div className={styles.deviceTraffic}>
-                      <span className={styles.dotRed} aria-hidden />
-                      <span className={styles.dotYellow} aria-hidden />
-                      <span className={styles.dotGreen} aria-hidden />
-                    </div>
-                    <div className={styles.deviceUrlBar} aria-hidden="true">
-                      cravburgers.shop
-                    </div>
-                  </div>
-                  <div className={styles.deviceIframeWrap}>
-                    <HeroTabletPreview />
-                    <a
-                      className={styles.deviceStaticLink}
-                      href={CRAV_SITE_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Abrir cravburgers.shop en pestaña nueva ↗
-                    </a>
-                  </div>
-                </div>
-              </ContainerScroll>
-            </div>
-
             <div className={styles.heroContent}>
-              <p className={styles.heroSub}>
-                Diseño profesional desde $200.000 COP.
+              <p className={styles.heroBadge}>
+                <span className={styles.heroBadgeBolt} aria-hidden="true">
+                  ⚡
+                </span>{' '}
+                Entrega en máximo 3 días
+              </p>
+              <div className={styles.heroTitleWrap}>
+                <div className={styles.heroTitleGlow} aria-hidden="true" />
+                <h1 className={styles.heroTitle}>
+                  Tu negocio necesita
+                  <br />
+                  <span className={styles.heroTitleLine2}>
+                    una página <span className={styles.heroTitleGradient}>que venda</span>
+                  </span>
+                </h1>
+              </div>
+              <p
+                style={{
+                  margin: '0 auto',
+                  maxWidth: 360,
+                  width: '100%',
+                  fontSize: 14,
+                  color: '#94a3b8',
+                  lineHeight: 1.7,
+                  textAlign: 'center',
+                }}
+              >
+                Diseño profesional, entrega en 3 días y
                 <br />
-                Trato claro por WhatsApp, sin vueltas.
+                todo el proceso por WhatsApp. Sin vueltas.
               </p>
 
-              <div className={styles.heroButtons}>
+              <div className={styles.heroPriceRibbon}>
+                <span className={styles.heroPriceRibbonFrom}>desde</span>
+                <span className={styles.heroPriceRibbonOld}>$350.000</span>
+                <span className={styles.heroPriceRibbonNow}>$200.000 COP</span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    marginTop: 8,
+                    padding: '3px 12px',
+                    fontSize: 11,
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    color: '#f87171',
+                    borderRadius: 999,
+                  }}
+                >
+                  🔥 Oferta limitada
+                </span>
+              </div>
+
+              <div
+                className={styles.heroButtons}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 10,
+                  marginTop: '1.2rem',
+                }}
+              >
                 <a className={styles.btnWhatsAppHero} href={WA_PRIMARY} target="_blank" rel="noopener noreferrer">
                   Escribir por WhatsApp →
                 </a>
@@ -504,28 +587,135 @@ export default function LandingsPage() {
                 </a>
               </div>
 
-              <ul className={styles.heroStats} aria-label="Beneficios rápidos">
-                <li>⚡ 3 días máximo</li>
-                <li>🔄 1 ajuste incluido</li>
-              </ul>
+              <div className={styles.heroMiniGrid} role="group" aria-label="Beneficios clave">
+                {HERO_MICRO_CARDS.map(function (item) {
+                  return (
+                    <div key={item.title} className={styles.heroMiniCard}>
+                      <div className={styles.heroMiniIcon} aria-hidden="true">
+                        {item.icon}
+                      </div>
+                      <div className={styles.heroMiniTexts}>
+                        <div className={styles.heroMiniTitle}>{item.title}</div>
+                        <div className={styles.heroMiniSub}>{item.sub}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </section>
 
-        <div className={styles.trustStrip} role="region" aria-label="Por qué confiar">
-          <div className={styles.trustStripInner}>
-            {TRUST_PILLS.map(function (pill) {
-              return (
-                <div key={pill.text} className={styles.trustPill}>
-                  <span className={styles.trustPillIcon} aria-hidden="true">
-                    {pill.icon}
-                  </span>
-                  <span className={styles.trustPillText}>{pill.text}</span>
+        <section aria-labelledby="sale-web-heading">
+          <style
+            dangerouslySetInnerHTML={{
+              __html:
+                '@keyframes spv-in{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}' +
+                '@keyframes spv-arr{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}' +
+                '.spv-inner{box-sizing:border-box;max-width:560px;margin:0 auto;padding:1.25rem 1rem;text-align:center}' +
+                '.spv-cards-row{display:flex;flex-direction:row;align-items:stretch;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;' +
+                'scroll-snap-type:x proximity;scroll-padding:0 8px;padding:4px 8px 14px;justify-content:flex-start;touch-action:pan-x}' +
+                '.spv-cards-row::-webkit-scrollbar{height:5px}' +
+                '.spv-cards-row::-webkit-scrollbar-thumb{background:rgba(124,58,237,.35);border-radius:99px}' +
+                '.spv-card{box-sizing:border-box;min-width:150px;max-width:170px;width:150px;flex-shrink:0;scroll-snap-align:start;' +
+                'display:flex;flex-direction:column;justify-content:flex-start;min-height:124px;' +
+                'background:#111111;border:1px solid #1e293b;border-radius:14px;padding:16px 14px;text-align:center;' +
+                'transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;animation:spv-in .58s cubic-bezier(.22,1,.36,1) forwards;opacity:0}' +
+                '@media (max-width:767px){' +
+                '.spv-inner{padding-left:max(12px, env(safe-area-inset-left));padding-right:max(12px, env(safe-area-inset-right));padding-top:1rem;padding-bottom:1.1rem}' +
+                '.spv-cards-row{gap:8px;padding:4px 2px 12px;justify-content:center;flex-wrap:nowrap;overflow-x:visible;' +
+                'scroll-snap-type:none;-webkit-overflow-scrolling:auto;touch-action:manipulation}' +
+                '.spv-card{flex:0 0 calc((100% - 16px)/3)!important;width:calc((100% - 16px)/3)!important;min-width:0!important;' +
+                'max-width:none!important;padding:10px 6px!important;border-radius:11px!important;min-height:0!important;' +
+                'scroll-snap-align:none}' +
+                '.spv-card > div:first-of-type{font-size:21px!important;line-height:1!important;margin-bottom:5px!important}' +
+                '.spv-card h3{font-size:11px!important;font-weight:700!important;line-height:1.25!important}' +
+                '.spv-card p{font-size:9.5px!important;line-height:1.42!important;margin-top:4px!important;word-break:break-word}' +
+                '}' +
+                '.spv-card:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(0,0,0,.38)}' +
+                '.spv-card--spot{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.4)}' +
+                '.spv-card--spot:hover{box-shadow:0 14px 36px rgba(124,58,237,.22)}' +
+                '.spv-d0{animation-delay:.06s}.spv-d1{animation-delay:.2s}.spv-d2{animation-delay:.34s}' +
+                '.spv-arrow{display:none;align-items:center;justify-content:center;font-size:20px;color:#334155;flex-shrink:0;' +
+                'align-self:center;min-height:48px;animation:spv-arr .45s ease .42s forwards;opacity:0}' +
+                '@media (min-width:768px){' +
+                '.spv-cards-row{justify-content:center;overflow-x:visible;flex-wrap:nowrap;padding:4px 0 8px;scroll-snap-type:none}' +
+                '.spv-arrow{display:flex}' +
+                '}' +
+                '@media (prefers-reduced-motion:reduce){' +
+                '.spv-card,.spv-arrow{animation:none!important;opacity:1!important;transform:none!important}' +
+                '.spv-card:hover{transform:none;box-shadow:none}' +
+                '.spv-card--spot:hover{box-shadow:none}' +
+                '}',
+            }}
+          />
+          <div className="spv-inner">
+            <p
+              style={{
+                margin: '0 0 4px',
+                fontSize: 15,
+                fontWeight: 400,
+                color: '#94a3b8',
+              }}
+            >
+              Una página pensada para una sola cosa:
+            </p>
+            <h2
+              id="sale-web-heading"
+              style={{
+                margin: '0 0 1.5rem',
+                fontSize: 'clamp(1.6rem, 5vw, 2.2rem)',
+                fontWeight: 900,
+                color: '#fff',
+                lineHeight: 1.15,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Que el cliente te contacte.
+            </h2>
+
+            <div
+              className="spv-cards-row"
+              role="group"
+              aria-label="Te ven, te contactan, te compran"
+            >
+              <article className="spv-card spv-d0">
+                <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 8 }} aria-hidden="true">
+                  👀
                 </div>
-              );
-            })}
+                <h3 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#fff' }}>Te ven</h3>
+                <p style={{ margin: '6px 0 0', fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
+                  El cliente llega a tu página desde Instagram, Google o WhatsApp
+                </p>
+              </article>
+
+              <span className="spv-arrow" aria-hidden="true">
+                →
+              </span>
+
+              <article className="spv-card spv-card--spot spv-d1">
+                <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 8 }} aria-hidden="true">
+                  💬
+                </div>
+                <h3 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#a78bfa' }}>Te contactan</h3>
+              </article>
+
+              <span className="spv-arrow" aria-hidden="true">
+                →
+              </span>
+
+              <article className="spv-card spv-d2">
+                <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 8 }} aria-hidden="true">
+                  💰
+                </div>
+                <h3 style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#fff' }}>Te compran</h3>
+                <p style={{ margin: '6px 0 0', fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
+                  Conviertes visitas en clientes sin hablar con nadie primero
+                </p>
+              </article>
+            </div>
           </div>
-        </div>
+        </section>
 
         <section className={styles.sectionIncludes} aria-labelledby="includes-heading">
           <div className={styles.container}>
@@ -662,6 +852,88 @@ export default function LandingsPage() {
           </div>
         </section>
 
+        <section className={styles.sectionResponsive} aria-labelledby="responsive-heading">
+          <div className={styles.container}>
+            <h2 id="responsive-heading" className={styles.sectionTitle}>
+              Se ve perfecto en cualquier pantalla
+            </h2>
+            <p className={styles.responsiveSubtitle}>
+              Tus clientes te encuentran desde el celular o el computador
+            </p>
+
+            <div className={styles.rspToggleRow}>
+              <button
+                type="button"
+                className={
+                  responsiveView === 'desktop'
+                    ? styles.rspToggleBtn + ' ' + styles.rspToggleBtnActive
+                    : styles.rspToggleBtn + ' ' + styles.rspToggleBtnInactive
+                }
+                onClick={function () {
+                  setResponsiveView('desktop');
+                }}
+                aria-pressed={responsiveView === 'desktop'}
+              >
+                💻 Desktop
+              </button>
+              <button
+                type="button"
+                className={
+                  responsiveView === 'mobile'
+                    ? styles.rspToggleBtn + ' ' + styles.rspToggleBtnActive
+                    : styles.rspToggleBtn + ' ' + styles.rspToggleBtnInactive
+                }
+                onClick={function () {
+                  setResponsiveView('mobile');
+                }}
+                aria-pressed={responsiveView === 'mobile'}
+              >
+                📱 Móvil
+              </button>
+            </div>
+
+            <div className={styles.rspViewStage}>
+              <div
+                className={
+                  styles.rspDesktopWrap +
+                  (responsiveView === 'desktop' ? ' ' + styles.rspPanelVisible : ' ' + styles.rspPanelHidden)
+                }
+                aria-hidden={responsiveView !== 'desktop'}
+              >
+                <div className={styles.rspBrowser}>
+                  <div className={styles.rspBrowserScreen}>
+                    <img
+                      src="/imagenes/imagen2.png"
+                      alt=""
+                      className={styles.rspImgDesktop}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className={
+                  styles.rspMobileWrap +
+                  (responsiveView === 'mobile' ? ' ' + styles.rspPanelVisible : ' ' + styles.rspPanelHidden)
+                }
+                aria-hidden={responsiveView !== 'mobile'}
+              >
+                <div className={styles.rspPhone}>
+                  <div className={styles.rspPhoneScreen}>
+                    <img
+                      src="/imagenes/imagen1.png"
+                      alt=""
+                      className={styles.rspImgMobile}
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className={styles.sectionPrice} aria-labelledby="price-heading">
           <div className={styles.containerNarrow}>
             <p className={styles.priceLabel}>Inversión única</p>
@@ -683,21 +955,6 @@ export default function LandingsPage() {
             <a className={styles.btnPriceCta} href={WA_PRIMARY} target="_blank" rel="noopener noreferrer">
               Quiero mi landing ahora →
             </a>
-          </div>
-        </section>
-
-        <section className={styles.sectionTestimonial} aria-labelledby="testimonial-heading">
-          <div className={styles.containerNarrow}>
-            <p className={styles.testimonialKicker}>Lo que cuenta quien ya pasó por el proceso</p>
-            <blockquote className={styles.testimonialCard}>
-              <p id="testimonial-heading" className={styles.testimonialQuote}>
-                “{HOME_TESTIMONIAL.quote}”
-              </p>
-              <footer className={styles.testimonialFooter}>
-                <strong className={styles.testimonialName}>{HOME_TESTIMONIAL.name}</strong>
-                <span className={styles.testimonialRole}>{HOME_TESTIMONIAL.role}</span>
-              </footer>
-            </blockquote>
           </div>
         </section>
 
@@ -748,6 +1005,595 @@ export default function LandingsPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section
+          aria-labelledby="complex-pricing-heading"
+          style={{
+            background: 'transparent',
+            padding: '0 16px 40px',
+          }}
+        >
+          <style
+            dangerouslySetInnerHTML={{
+              __html:
+                '.lpc-pricing-mobile{display:block;width:100%;max-width:900px;margin:0 auto;box-sizing:border-box}' +
+                '.lpc-pricing-desktop{display:none;width:100%;box-sizing:border-box}' +
+                '@media (min-width:769px){' +
+                '.lpc-pricing-mobile{display:none!important}' +
+                '.lpc-pricing-desktop{display:block!important;max-width:900px;margin:0 auto;width:100%}' +
+                '}' +
+                '.lpc-pricing-desktop .lpc-table-wrap{box-sizing:border-box;width:100%;overflow-x:auto;overflow-y:hidden;' +
+                '-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;' +
+                'scrollbar-color:rgba(124,58,237,0.35) transparent;scrollbar-width:thin}' +
+                '@media (min-width:769px){' +
+                '.lpc-table{min-width:0!important;width:100%!important}' +
+                'colgroup col.lpc-col-h{width:200px!important;min-width:200px!important;max-width:200px!important}' +
+                'colgroup col.lpc-col-p{width:auto!important;min-width:0!important}' +
+                '}' +
+                '.lpc-card-name{background:transparent!important;-webkit-tap-highlight-color:transparent}' +
+                '.lpc-plan-card{box-sizing:border-box;width:100%;min-width:0}' +
+                '.lpc-table tbody tr.lpc-row:hover{background:rgba(124,58,237,.04)!important}',
+            }}
+          />
+          <h2
+            id="complex-pricing-heading"
+            style={{
+              margin: '0 0 0.5rem',
+              textAlign: 'center',
+              fontSize: 'clamp(1.35rem, 4vw, 1.85rem)',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+              color: '#f8fafc',
+              lineHeight: 1.15,
+            }}
+          >
+            ¿Necesitas algo más complejo?
+          </h2>
+          <p
+            style={{
+              margin: '0 auto 2rem',
+              textAlign: 'center',
+              color: '#94a3b8',
+              fontSize: 14,
+              maxWidth: 520,
+            }}
+          >
+            También construimos desde tiendas hasta plataformas completas
+          </p>
+
+          <div className="lpc-pricing-mobile">
+            {PRICING_MOBILE_STACK.map(function (plan, planIdx) {
+              var IconComp = plan.icon;
+              var isLast = planIdx === PRICING_MOBILE_STACK.length - 1;
+              return (
+                <div
+                  key={plan.key}
+                  style={{
+                    position: 'relative',
+                    background: '#111111',
+                    border: plan.featured ? '1.5px solid #7C3AED' : '1px solid #1e293b',
+                    boxSizing: 'border-box',
+                    borderRadius: 16,
+                    padding: plan.featured ? '28px 20px 20px' : 20,
+                    width: '100%',
+                    marginBottom: isLast ? 0 : 12,
+                  }}
+                >
+                  {plan.featured ? (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 14,
+                        background: '#7C3AED',
+                        color: '#fff',
+                        fontSize: 10,
+                        fontWeight: 600,
+                        padding: '3px 10px',
+                        borderRadius: 999,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      ⭐ Más vendido
+                    </div>
+                  ) : null}
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      gap: 8,
+                      flexWrap: 'wrap',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <IconComp size={16} color="#94a3b8" aria-hidden />
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#94a3b8' }}>{plan.name}</span>
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        background: '#1e293b',
+                        color: '#94a3b8',
+                        fontWeight: 600,
+                        borderRadius: 999,
+                        padding: '3px 10px',
+                      }}
+                    >
+                      {plan.planBadge}
+                    </span>
+                  </div>
+                  <p
+                    style={{
+                      margin: '12px 0 4px',
+                      fontSize: 28,
+                      fontWeight: 900,
+                      color: '#fff',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {plan.priceMain}
+                  </p>
+                  <p
+                    style={{
+                      margin: '0 0 16px',
+                      fontSize: 13,
+                      color: '#475569',
+                      textDecoration: 'line-through',
+                    }}
+                  >
+                    {plan.priceStruck}
+                  </p>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 6,
+                      marginBottom: 16,
+                    }}
+                  >
+                    {plan.featuresList.map(function (feat, fi) {
+                      return (
+                        <div
+                          key={plan.key + '-' + fi}
+                          style={{ display: 'flex', gap: 8, alignItems: 'center' }}
+                        >
+                          <Check size={13} color="#22c55e" strokeWidth={2.5} aria-hidden />
+                          <span style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.35 }}>{feat}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {plan.ctaGreen ? (
+                    <a
+                      href={plan.ctaHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        background: '#22c55e',
+                        color: '#fff',
+                        padding: 10,
+                        borderRadius: 8,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        border: 'none',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {plan.ctaLabel}
+                    </a>
+                  ) : (
+                    <a
+                      href={plan.ctaHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        background: 'transparent',
+                        border: '1.5px solid #7C3AED',
+                        color: '#a78bfa',
+                        padding: 10,
+                        borderRadius: 8,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {plan.ctaLabel}
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="lpc-pricing-desktop">
+            <div className="lpc-table-wrap">
+              <table
+              className="lpc-table"
+              style={{
+                width: '100%',
+                minWidth: 900,
+                borderCollapse: 'collapse',
+                tableLayout: 'fixed',
+              }}
+            >
+              <colgroup>
+                <col className="lpc-col-h" />
+                <col className="lpc-col-p" />
+                <col className="lpc-col-p" />
+                <col className="lpc-col-p" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    style={{
+                      verticalAlign: 'top',
+                      padding: '8px 8px 12px',
+                      fontWeight: 400,
+                    }}
+                  />
+                  <th
+                    scope="col"
+                    style={{
+                      verticalAlign: 'top',
+                      padding: '8px 8px 12px',
+                      fontWeight: 400,
+                    }}
+                  >
+                    <div
+                      className="lpc-plan-card"
+                      style={{
+                        position: 'relative',
+                        background: '#111111',
+                        border: '1.5px solid #7C3AED',
+                        boxShadow: '0 0 24px rgba(124, 58, 237, 0.15)',
+                        borderRadius: 12,
+                        padding: 16,
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: -10,
+                          right: 12,
+                          background: '#7C3AED',
+                          color: '#fff',
+                          fontSize: 10,
+                          padding: '3px 10px',
+                          borderRadius: 999,
+                          fontWeight: 600,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        ⭐ Más vendido
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          marginBottom: 8,
+                        }}
+                      >
+                        <Rocket size={16} color="#a78bfa" aria-hidden />
+                        <span
+                          className="lpc-card-name"
+                          style={{
+                            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                            fontSize: 13,
+                            color: '#94a3b8',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Landing
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: 10,
+                          background: '#1e293b',
+                          color: '#94a3b8',
+                          borderRadius: 999,
+                          padding: '2px 10px',
+                          marginBottom: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        El más popular
+                      </span>
+                      <p style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+                        $200.000
+                      </p>
+                      <p
+                        style={{
+                          margin: '0 0 12px',
+                          fontSize: 13,
+                          color: '#475569',
+                          textDecoration: 'line-through',
+                        }}
+                      >
+                        $350.000
+                      </p>
+                      <a
+                        href={WA_LANDING_PLAN_TABLE}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          background: '#22c55e',
+                          color: '#fff',
+                          padding: 10,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          border: 'none',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Escribir por WhatsApp →
+                      </a>
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    style={{
+                      verticalAlign: 'top',
+                      padding: '8px 8px 12px',
+                      fontWeight: 400,
+                    }}
+                  >
+                    <div
+                      className="lpc-plan-card"
+                      style={{
+                        background: '#111111',
+                        border: '1px solid #1e293b',
+                        borderRadius: 12,
+                        padding: 16,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          marginBottom: 8,
+                        }}
+                      >
+                        <Building2 size={16} color="#94a3b8" aria-hidden />
+                        <span
+                          className="lpc-card-name"
+                          style={{
+                            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                            fontSize: 13,
+                            color: '#94a3b8',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Institucional
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: 10,
+                          background: '#1e293b',
+                          color: '#94a3b8',
+                          borderRadius: 999,
+                          padding: '2px 10px',
+                          marginBottom: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Para empresas
+                      </span>
+                      <p style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+                        Desde $800.000
+                      </p>
+                      <p
+                        style={{
+                          margin: '0 0 12px',
+                          fontSize: 13,
+                          color: '#475569',
+                          textDecoration: 'line-through',
+                        }}
+                      >
+                        $1.500.000
+                      </p>
+                      <a
+                        href={WA_PRIMARY}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          background: 'transparent',
+                          border: '1.5px solid #7C3AED',
+                          color: '#a78bfa',
+                          padding: 10,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Cotizar →
+                      </a>
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    style={{
+                      verticalAlign: 'top',
+                      padding: '8px 8px 12px',
+                      fontWeight: 400,
+                    }}
+                  >
+                    <div
+                      className="lpc-plan-card"
+                      style={{
+                        background: '#111111',
+                        border: '1px solid #1e293b',
+                        borderRadius: 12,
+                        padding: 16,
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          marginBottom: 8,
+                        }}
+                      >
+                        <ShoppingCart size={16} color="#94a3b8" aria-hidden />
+                        <span
+                          className="lpc-card-name"
+                          style={{
+                            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                            fontSize: 13,
+                            color: '#94a3b8',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Ecommerce
+                        </span>
+                      </div>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: 10,
+                          background: '#1e293b',
+                          color: '#94a3b8',
+                          borderRadius: 999,
+                          padding: '2px 10px',
+                          marginBottom: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Tienda completa
+                      </span>
+                      <p style={{ margin: '0 0 4px', fontSize: 22, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>
+                        Desde $1.500.000
+                      </p>
+                      <p
+                        style={{
+                          margin: '0 0 12px',
+                          fontSize: 13,
+                          color: '#475569',
+                          textDecoration: 'line-through',
+                        }}
+                      >
+                        $2.500.000
+                      </p>
+                      <a
+                        href={WA_PRIMARY}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          background: 'transparent',
+                          border: '1.5px solid #7C3AED',
+                          color: '#a78bfa',
+                          padding: 10,
+                          borderRadius: 8,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        Cotizar →
+                      </a>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {PRICING_FEATURE_ROWS.map(function (row, idx) {
+                  var oddBg = idx % 2 === 0 ? '#0d0d0d' : 'transparent';
+                  return (
+                    <tr key={row.label} className="lpc-row" style={{ borderBottom: '1px solid #0f172a', background: oddBg }}>
+                      <td
+                        style={{
+                          padding: '12px 8px',
+                          fontSize: 13,
+                          color: '#94a3b8',
+                          textAlign: 'left',
+                          paddingLeft: 8,
+                          verticalAlign: 'middle',
+                        }}
+                      >
+                        {row.label}
+                      </td>
+                      <td
+                        style={{
+                          padding: '12px 8px',
+                          textAlign: 'center',
+                          verticalAlign: 'middle',
+                        }}
+                      >
+                        {renderPricingCell(row.l)}
+                      </td>
+                      <td
+                        style={{
+                          padding: '12px 8px',
+                          textAlign: 'center',
+                          verticalAlign: 'middle',
+                        }}
+                      >
+                        {renderPricingCell(row.i)}
+                      </td>
+                      <td
+                        style={{
+                          padding: '12px 8px',
+                          textAlign: 'center',
+                          verticalAlign: 'middle',
+                        }}
+                      >
+                        {renderPricingCell(row.e)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            </div>
+          </div>
+          <p
+            style={{
+              fontSize: 12,
+              color: '#475569',
+              textAlign: 'center',
+              marginTop: 16,
+              marginBottom: 0,
+              padding: '0 8px',
+            }}
+          >
+            * Todos los precios son en COP. Hosting y dominio no incluidos.
+          </p>
         </section>
 
         <section className={styles.sectionFinalCta} aria-labelledby="final-cta-heading">
