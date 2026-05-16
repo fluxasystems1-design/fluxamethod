@@ -60,6 +60,9 @@ const HERO_MICRO_CARDS = [
 
 const WA_LANDING_PLAN_TABLE = 'https://wa.me/573105813007';
 
+const RSP_MOBILE_VIDEO_SRC =
+  '/imagenes/' + encodeURIComponent('Video referencia .mov');
+
 const PRICING_FEATURE_ROWS = [
   { label: 'Diseño personalizado', l: 'check', i: 'check', e: 'check' },
   { label: '100% responsive', l: 'check', i: 'check', e: 'check' },
@@ -395,10 +398,35 @@ function OrbitIconsField() {
 export default function LandingsPage() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [responsiveView, setResponsiveView] = useState('desktop');
+  const [responsiveView, setResponsiveView] = useState('mobile');
   const intervalRef = useRef(null);
   const heroSectionRef = useRef(null);
   const heroCanvasRef = useRef(null);
+  const rspMobileVideoRef = useRef(null);
+
+  useEffect(
+    function () {
+      var video = rspMobileVideoRef.current;
+      if (!video) return undefined;
+
+      if (responsiveView !== 'mobile') {
+        video.pause();
+        return undefined;
+      }
+
+      var frameId = window.requestAnimationFrame(function () {
+        var playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(function () {});
+        }
+      });
+
+      return function () {
+        window.cancelAnimationFrame(frameId);
+      };
+    },
+    [responsiveView],
+  );
 
   useEffect(
     function () {
@@ -864,20 +892,6 @@ export default function LandingsPage() {
               <button
                 type="button"
                 className={
-                  responsiveView === 'desktop'
-                    ? styles.rspToggleBtn + ' ' + styles.rspToggleBtnActive
-                    : styles.rspToggleBtn + ' ' + styles.rspToggleBtnInactive
-                }
-                onClick={function () {
-                  setResponsiveView('desktop');
-                }}
-                aria-pressed={responsiveView === 'desktop'}
-              >
-                💻 Desktop
-              </button>
-              <button
-                type="button"
-                className={
                   responsiveView === 'mobile'
                     ? styles.rspToggleBtn + ' ' + styles.rspToggleBtnActive
                     : styles.rspToggleBtn + ' ' + styles.rspToggleBtnInactive
@@ -888,6 +902,20 @@ export default function LandingsPage() {
                 aria-pressed={responsiveView === 'mobile'}
               >
                 📱 Móvil
+              </button>
+              <button
+                type="button"
+                className={
+                  responsiveView === 'desktop'
+                    ? styles.rspToggleBtn + ' ' + styles.rspToggleBtnActive
+                    : styles.rspToggleBtn + ' ' + styles.rspToggleBtnInactive
+                }
+                onClick={function () {
+                  setResponsiveView('desktop');
+                }}
+                aria-pressed={responsiveView === 'desktop'}
+              >
+                💻 Desktop
               </button>
             </div>
 
@@ -920,11 +948,24 @@ export default function LandingsPage() {
               >
                 <div className={styles.rspPhone}>
                   <div className={styles.rspPhoneScreen}>
-                    <img
-                      src="/imagenes/imagen1.png"
-                      alt=""
-                      className={styles.rspImgMobile}
-                      draggable={false}
+                    <video
+                      ref={rspMobileVideoRef}
+                      src={RSP_MOBILE_VIDEO_SRC}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="auto"
+                      className={styles.rspPhoneVideo}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'block',
+                        objectFit: 'cover',
+                        objectPosition: 'top center',
+                        pointerEvents: 'none',
+                      }}
+                      aria-hidden
                     />
                   </div>
                 </div>
