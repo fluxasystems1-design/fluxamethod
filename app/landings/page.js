@@ -6,8 +6,7 @@ import createGlobe from 'cobe';
 import { FallingPattern } from './FallingPattern';
 import styles from './page.module.css';
 
-const WA_PRIMARY =
-  'https://api.whatsapp.com/message/SEVUH3LFWHLUE1?autoload=1&app_absent=0';
+const WA_PRIMARY = 'https://wa.me/573105813007';
 
 const INCLUDE_CARDS = [
   { icon: '📱', title: 'Responsive', text: 'Se ve perfecto en celular y computador' },
@@ -59,7 +58,7 @@ const HERO_MICRO_CARDS = [
   { icon: '🔄', title: 'Un ajuste incluido', sub: 'Sin costo adicional' },
 ];
 
-const WA_LANDING_PLAN_TABLE = 'https://wa.me/573001234567';
+const WA_LANDING_PLAN_TABLE = 'https://wa.me/573105813007';
 
 const PRICING_FEATURE_ROWS = [
   { label: 'Diseño personalizado', l: 'check', i: 'check', e: 'check' },
