@@ -1,13 +1,13 @@
 /* SECCIÓN 4 — Catálogo · tabs horizontales */
 .section {
-  padding: 56px 16px 64px;
+  padding: 40px 16px 48px;
   background: var(--color-bg, #0a0a14);
   overflow-x: clip;
 }
 
 @media (min-width: 768px) {
   .section {
-    padding: 72px 20px;
+    padding: 48px 20px 56px;
   }
 }
 

@@ -12,11 +12,11 @@ function WhatsAppIcon() {
   );
 }
 
-export default function ChileWhatsAppFloat() {
+export default function ChileWhatsAppFloat({ className = '' }) {
   return (
     <a
       href={CHILE_WA_HREF}
-      className={styles.float}
+      className={`${styles.float} ${className}`.trim()}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Escribir por WhatsApp"

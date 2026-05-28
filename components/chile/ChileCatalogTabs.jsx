@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import ChileSection from './ChileSection';
 import styles from './ChileCatalogTabs.module.css';
 
@@ -127,24 +127,21 @@ function CatalogContent({ active }) {
 export default function ChileCatalogTabs() {
   const [activeId, setActiveId] = useState(TABS[0].id);
   const tabRefs = useRef({});
+  const tabBarRef = useRef(null);
   const active = TABS.find((t) => t.id === activeId) || TABS[0];
+
+  function scrollTabIntoBar(id) {
+    const bar = tabBarRef.current;
+    const tab = tabRefs.current[id];
+    if (!bar || !tab) return;
+    const targetLeft = tab.offsetLeft - bar.clientWidth / 2 + tab.offsetWidth / 2;
+    bar.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+  }
 
   function handleTabClick(id) {
     setActiveId(id);
+    scrollTabIntoBar(id);
   }
-
-  useEffect(
-    function () {
-      const el = tabRefs.current[activeId];
-      if (!el) return;
-      el.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest',
-      });
-    },
-    [activeId]
-  );
 
   return (
     <ChileSection className={styles.section} id="catalogo">
@@ -152,7 +149,12 @@ export default function ChileCatalogTabs() {
         <h2 className={styles.h2}>¿Qué construimos?</h2>
         <p className={styles.sub}>Selecciona la categoría que necesitas.</p>
 
-        <div className={styles.tabBar} role="tablist" aria-label="Catálogo de servicios">
+        <div
+          ref={tabBarRef}
+          className={styles.tabBar}
+          role="tablist"
+          aria-label="Catálogo de servicios"
+        >
           {TABS.map((tab) => {
             const isActive = activeId === tab.id;
             return (

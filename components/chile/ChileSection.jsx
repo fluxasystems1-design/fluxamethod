@@ -12,7 +12,7 @@ export default function ChileSection({ children, className = '', id }) {
       className={className}
       initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 28 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12, margin: '-60px' }}
+      viewport={{ once: true, amount: 0.08, margin: '0px' }}
       transition={{ duration: reduceMotion ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}

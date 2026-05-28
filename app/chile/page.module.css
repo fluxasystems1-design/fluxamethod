@@ -14,6 +14,7 @@
   font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
   overflow-x: clip;
   padding-bottom: 24px;
+  isolation: isolate;
 }
 
 .wrap::before {
@@ -138,7 +139,7 @@
 .intro {
   max-width: 700px;
   margin: 0 auto;
-  padding: 48px 20px 40px;
+  padding: 28px 20px 12px;
   text-align: center;
 }
 
@@ -152,7 +153,7 @@
 }
 
 .introAccent {
-  margin: 0 0 20px;
+  margin: 0 0 14px;
   font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
   font-weight: 800;
   font-size: clamp(1.25rem, 4vw, 1.75rem);
@@ -170,8 +171,8 @@
 }
 
 .trustLine {
-  margin: 24px 0 0;
-  padding-top: 20px;
+  margin: 14px 0 0;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.88rem;
   font-weight: 600;
@@ -181,14 +182,14 @@
 
 /* SECCIÓN 3 — Para quién */
 .audience {
-  padding: 24px 0 64px;
+  padding: 8px 0 48px;
   background: rgba(0, 0, 0, 0.2);
   border-top: 1px solid #1a1a1a;
   border-bottom: 1px solid #1a1a1a;
 }
 
 .sectionTitle {
-  margin: 0 0 32px;
+  margin: 0 0 20px;
   font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
   font-weight: 800;
   font-size: clamp(1.5rem, 4vw, 2rem);
@@ -254,7 +255,7 @@
 /* CTA intermedio post-catálogo */
 .midCta {
   text-align: center;
-  padding: 24px 20px 28px;
+  padding: 16px 20px 20px;
 }
 
 .midCtaText {
@@ -297,7 +298,7 @@
 
 /* SECCIÓN 5 — Proceso */
 .process {
-  padding: 48px 0 56px;
+  padding: 36px 0 40px;
 }
 
 .processLead {
@@ -368,12 +369,36 @@
   color: #94a3b8;
 }
 
+/* Cierre de página — CTA + footer; planeta anclado al fondo */
+.pageEnd {
+  position: relative;
+  overflow: visible;
+  background: linear-gradient(180deg, #0a0a0a 0%, #06060f 35%, #06060f 100%);
+  border-top: 1px solid var(--color-primary);
+  padding-bottom: 0;
+}
+
+.pageEndFlow {
+  position: relative;
+  z-index: 2;
+  padding: 0 16px 12px;
+  overflow: visible;
+}
+
+.pageEndContent {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0 4px;
+}
+
 /* SECCIÓN 6 — CTA */
 .ctaFinal {
-  text-align: center;
-  padding: 48px 20px 56px;
-  background: #0a0a0a;
-  border-top: 1px solid var(--color-primary);
+  text-align: left;
+  padding: 28px 0 20px;
+  background: transparent;
+  border-top: none;
 }
 
 .ctaTitle {
@@ -385,8 +410,8 @@
 }
 
 .ctaSub {
-  max-width: 520px;
-  margin: 0 auto 28px;
+  max-width: 36em;
+  margin: 0 0 24px;
   font-size: 1rem;
   line-height: 1.55;
   color: #94a3b8;
@@ -426,10 +451,12 @@
 
 /* Footer */
 .footer {
-  padding: 40px 20px 48px;
-  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding: 16px 0 clamp(140px, 36vw, 220px);
+  text-align: left;
   border-top: 1px solid #1a1a1a;
-  background: #06060f;
+  background: transparent;
 }
 
 .footerLead {
@@ -437,8 +464,7 @@
   font-size: 0.9rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.75);
-  max-width: 480px;
-  margin-inline: auto;
+  max-width: 36em;
 }
 
 .footerMeta {
@@ -451,7 +477,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 12px 20px;
 }
 
@@ -464,6 +490,79 @@
 
 .footerLink:hover {
   text-decoration: underline;
+}
+
+/* Planeta — esquina inferior derecha, al final de todo */
+.cornerLanding {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: clamp(300px, 72vw, 640px);
+  line-height: 0;
+  pointer-events: none;
+  transform: translate(6%, 8%);
+}
+
+.cornerLandingImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: clamp(260px, 52vw, 480px);
+  object-fit: contain;
+  object-position: bottom right;
+}
+
+/* WhatsApp flotante a la izquierda para no tapar el planeta */
+.waFloatLeft {
+  right: auto !important;
+  left: 18px;
+}
+
+@media (min-width: 768px) {
+  .pageEndFlow {
+    padding: 0 28px 16px;
+  }
+
+  .cornerLanding {
+    width: clamp(380px, 44vw, 640px);
+    transform: translate(4%, 6%);
+  }
+
+  .cornerLandingImg {
+    max-height: 480px;
+  }
+
+  .footer {
+    padding-bottom: clamp(200px, 24vw, 280px);
+  }
+
+  .pageEndContent {
+    max-width: 58%;
+  }
+
+  .waFloatLeft {
+    left: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .cornerLanding {
+    width: min(76vw, 360px);
+    transform: translate(8%, 4%);
+  }
+
+  .cornerLandingImg {
+    max-height: clamp(220px, 55vw, 340px);
+  }
+
+  .footer {
+    padding-bottom: clamp(130px, 38vw, 200px);
+  }
+
+  .pageEndContent {
+    max-width: 92%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

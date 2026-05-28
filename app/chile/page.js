@@ -10,7 +10,12 @@ import ChileHero from '@/components/chile/ChileHero';
 import ChileWhatsAppFloat from '@/components/chile/ChileWhatsAppFloat';
 import ChileSection from '@/components/chile/ChileSection';
 import LandingsGlobeSection from '@/components/landings/LandingsGlobeSection';
-import { CHILE_LOGO_SRC, CHILE_WA_HREF, CHILE_WA_PHONE_DISPLAY } from '@/lib/chile/brand';
+import {
+  CHILE_LANDING_CORNER_SRC,
+  CHILE_LOGO_SRC,
+  CHILE_WA_HREF,
+  CHILE_WA_PHONE_DISPLAY,
+} from '@/lib/chile/brand';
 import styles from './page.module.css';
 
 const NAV_LINKS = [
@@ -235,52 +240,71 @@ export default function ChileLandingPage() {
           </div>
         </ChileSection>
 
-        <ChileSection className={styles.ctaFinal} id="cotizar">
-          <h2 className={styles.ctaTitle}>¿Tienes un proyecto en mente?</h2>
-          <p className={styles.ctaSub}>
-            Cuéntanos qué necesitas construir. Sin compromiso — primero entendemos tu visión y luego te
-            decimos exactamente cómo lo hacemos realidad.
-          </p>
-          <a
-            href={CHILE_WA_HREF}
-            className={styles.ctaBtn}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Hablar con el equipo
-          </a>
-          <p className={styles.ctaNote}>Respondemos en menos de 24 horas · Lunes a viernes</p>
-        </ChileSection>
+        <div className={styles.pageEnd}>
+          <div className={styles.pageEndFlow}>
+            <ChileSection className={styles.ctaFinal} id="cotizar">
+              <div className={styles.pageEndContent}>
+                <h2 className={styles.ctaTitle}>¿Tienes un proyecto en mente?</h2>
+                <p className={styles.ctaSub}>
+                  Cuéntanos qué necesitas construir. Sin compromiso — primero entendemos tu visión y
+                  luego te decimos exactamente cómo lo hacemos realidad.
+                </p>
+                <a
+                  href={CHILE_WA_HREF}
+                  className={styles.ctaBtn}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Hablar con el equipo
+                </a>
+                <p className={styles.ctaNote}>Respondemos en menos de 24 horas · Lunes a viernes</p>
+              </div>
+            </ChileSection>
+
+            <footer className={styles.footer}>
+              <div className={styles.pageEndContent}>
+                <p className={styles.footerLead}>
+                  Fluxa Method — Arquitectura digital para marcas que crecen sin operar manualmente.
+                </p>
+                <p className={styles.footerMeta}>
+                  fluxamethod.com · @fluxamethod · Chile y LATAM
+                </p>
+                <div className={styles.footerLinks}>
+                  <a
+                    href={CHILE_WA_HREF}
+                    className={styles.footerLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    WhatsApp {CHILE_WA_PHONE_DISPLAY}
+                  </a>
+                  <a
+                    href="https://instagram.com/fluxamethod"
+                    className={styles.footerLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Instagram
+                  </a>
+                </div>
+              </div>
+            </footer>
+          </div>
+
+          <div className={styles.cornerLanding} aria-hidden>
+            <Image
+              src={CHILE_LANDING_CORNER_SRC}
+              alt=""
+              width={900}
+              height={900}
+              className={styles.cornerLandingImg}
+              sizes="(max-width: 768px) 72vw, 620px"
+            />
+          </div>
+        </div>
       </main>
 
-      <footer className={styles.footer}>
-        <p className={styles.footerLead}>
-          Fluxa Method — Arquitectura digital para marcas que crecen sin operar manualmente.
-        </p>
-        <p className={styles.footerMeta}>
-          fluxamethod.com · @fluxamethod · Chile y LATAM
-        </p>
-        <div className={styles.footerLinks}>
-          <a
-            href={CHILE_WA_HREF}
-            className={styles.footerLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            WhatsApp {CHILE_WA_PHONE_DISPLAY}
-          </a>
-          <a
-            href="https://instagram.com/fluxamethod"
-            className={styles.footerLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Instagram
-          </a>
-        </div>
-      </footer>
-
-      <ChileWhatsAppFloat />
+      <ChileWhatsAppFloat className={styles.waFloatLeft} />
     </div>
   );
 }
