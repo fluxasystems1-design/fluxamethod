@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Check, Minus, Rocket, Building2, ShoppingCart } from 'lucide-react';
-import createGlobe from 'cobe';
 import { FallingPattern } from './FallingPattern';
+import LandingsGlobeSection from '@/components/landings/LandingsGlobeSection';
+import LandingsVitrinaCarousel from '@/components/landings/LandingsVitrinaCarousel';
 import styles from './page.module.css';
 
 const WA_PRIMARY = 'https://wa.me/573105813007';
@@ -15,24 +16,6 @@ const INCLUDE_CARDS = [
   { icon: '💬', title: 'Botón WhatsApp', text: 'Flotante, siempre visible' },
   { icon: '🎨', title: 'Diseño personalizado', text: 'Con tus colores y tu logo' },
   { icon: '🔄', title: 'Un ajuste incluido', text: 'Cambios sin costo adicional' },
-];
-
-const VITRINA_ITEMS = [
-  {
-    src: '/imagenes/' + encodeURIComponent('ChatGPT Image 14 may 2026, 04_52_03 p.m..png'),
-    name: 'Testosterone',
-    category: 'Suplementos',
-  },
-  {
-    src: '/imagenes/' + encodeURIComponent('ChatGPT Image 14 may 2026, 04_52_06 p.m..png'),
-    name: 'Sopladora',
-    category: 'Herramientas',
-  },
-  {
-    src: '/imagenes/' + encodeURIComponent('ChatGPT Image 14 may 2026, 04_52_09 p.m..png'),
-    name: 'Rueda Abdominal',
-    category: 'Fitness',
-  },
 ];
 
 const PRICE_CHECKS = [
@@ -160,104 +143,6 @@ function renderPricingCell(value) {
     );
   }
   return <span style={{ fontSize: 12, color: '#94a3b8' }}>{value}</span>;
-}
-
-function CobeGlobePulse() {
-  var canvasRef = useRef(null);
-  var rafRef = useRef(null);
-
-  useEffect(function () {
-    var canvas = canvasRef.current;
-    if (!canvas) return undefined;
-
-    var cyan = [0.2, 0.92, 1];
-    var cyanSoft = [0.15, 0.85, 0.98];
-    var baseMarkers = [
-      { location: [4.711, -74.0721], base: 0.045, color: cyanSoft },
-      { location: [40.4168, -3.7038], base: 0.05, color: cyan },
-      { location: [19.4326, -99.1332], base: 0.044, color: cyanSoft },
-      { location: [39.8283, -98.5795], base: 0.052, color: cyan },
-    ];
-
-    var phi = 0;
-    var dpr = Math.min(2, typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1);
-
-    var globe = createGlobe(canvas, {
-      devicePixelRatio: dpr,
-      width: 320,
-      height: 320,
-      phi: 0,
-      theta: 0.32,
-      dark: 1,
-      diffuse: 1.22,
-      mapSamples: 14000,
-      mapBrightness: 5.8,
-      mapBaseBrightness: 0,
-      baseColor: [0.18, 0.18, 0.22],
-      markerColor: cyan,
-      glowColor: [0.3, 0.65, 1],
-      markers: baseMarkers.map(function (m) {
-        return { location: m.location, size: m.base, color: m.color };
-      }),
-      scale: 1.06,
-    });
-
-    function tick() {
-      phi += 0.0035;
-      var t = Date.now() * 0.0028;
-      var markers = baseMarkers.map(function (m, i) {
-        var pulse = 0.018 * Math.sin(t + i * 1.37);
-        return {
-          location: m.location,
-          size: Math.max(0.02, m.base + pulse),
-          color: m.color,
-        };
-      });
-      globe.update({ phi: phi, theta: 0.32, markers: markers });
-      rafRef.current = window.requestAnimationFrame(tick);
-    }
-
-    rafRef.current = window.requestAnimationFrame(tick);
-
-    return function () {
-      if (rafRef.current) {
-        window.cancelAnimationFrame(rafRef.current);
-      }
-      globe.destroy();
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className={styles.globeCanvas} aria-hidden />;
-}
-
-function GlobeWithPins() {
-  return (
-    <div className={styles.globeStage}>
-      <div className={styles.globePins}>
-        <div className={styles.globePin + ' ' + styles.globePinEs}>
-          <span className={styles.globePinDot} aria-hidden />
-          <span className={styles.globePinLine} aria-hidden />
-          <span className={styles.globePinLabel}>🇪🇸 España</span>
-        </div>
-        <div className={styles.globePin + ' ' + styles.globePinUs}>
-          <span className={styles.globePinDot} aria-hidden />
-          <span className={styles.globePinLine} aria-hidden />
-          <span className={styles.globePinLabel}>🇺🇸 USA</span>
-        </div>
-        <div className={styles.globePin + ' ' + styles.globePinMx}>
-          <span className={styles.globePinLabel}>🇲🇽 México</span>
-          <span className={styles.globePinLine} aria-hidden />
-          <span className={styles.globePinDot} aria-hidden />
-        </div>
-        <div className={styles.globePin + ' ' + styles.globePinCo}>
-          <span className={styles.globePinDot} aria-hidden />
-          <span className={styles.globePinLine} aria-hidden />
-          <span className={styles.globePinLabel}>🇨🇴 Colombia</span>
-        </div>
-      </div>
-      <CobeGlobePulse />
-    </div>
-  );
 }
 
 function OrbitIconsField() {
@@ -396,10 +281,7 @@ function OrbitIconsField() {
 }
 
 export default function LandingsPage() {
-  const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [responsiveView, setResponsiveView] = useState('mobile');
-  const intervalRef = useRef(null);
   const heroSectionRef = useRef(null);
   const heroCanvasRef = useRef(null);
   const rspMobileVideoRef = useRef(null);
@@ -426,24 +308,6 @@ export default function LandingsPage() {
       };
     },
     [responsiveView],
-  );
-
-  useEffect(
-    function () {
-      if (!paused) {
-        intervalRef.current = setInterval(function () {
-          setActive(function (prev) {
-            return (prev + 1) % VITRINA_ITEMS.length;
-          });
-        }, 2500);
-      }
-      return function () {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    },
-    [paused],
   );
 
   useEffect(function () {
@@ -765,119 +629,9 @@ export default function LandingsPage() {
           </div>
         </section>
 
-        <section className={styles.sectionExamples} id="ejemplos" aria-labelledby="examples-heading">
-          <div className={styles.container}>
-            <h2 id="examples-heading" className={styles.carouselSectionTitle}>
-              Estas landings ya venden. La tuya puede ser la próxima.
-            </h2>
-            <p className={styles.carouselSectionSub}>Landings que convierten para cada nicho</p>
+        <LandingsVitrinaCarousel />
 
-            <div
-              className={styles.vitrinaShowcase}
-              onMouseEnter={function () {
-                setPaused(true);
-              }}
-              onMouseLeave={function () {
-                setPaused(false);
-              }}
-            >
-              <div className={styles.vitrinaWrap}>
-                <div className={styles.vitrinaStageBlock}>
-                  <button
-                    type="button"
-                    className={styles.vitrinaArrow}
-                    aria-label="Anterior"
-                    onClick={function () {
-                      setActive(function (i) {
-                        return (i - 1 + VITRINA_ITEMS.length) % VITRINA_ITEMS.length;
-                      });
-                    }}
-                  >
-                    ←
-                  </button>
-
-                  <div className={styles.vitrinaStage}>
-                    {[0, 1, 2, 3, 4].map(function (slot) {
-                      var n = VITRINA_ITEMS.length;
-                      var slotIndex = (active + slot - 2 + n * 10) % n;
-                      var item = VITRINA_ITEMS[slotIndex];
-                      var posClass =
-                        slot === 0
-                          ? styles.vitrinaPos0
-                          : slot === 1
-                            ? styles.vitrinaPos1
-                            : slot === 2
-                              ? styles.vitrinaPos2
-                              : slot === 3
-                                ? styles.vitrinaPos3
-                                : styles.vitrinaPos4;
-                      return (
-                        <div key={slot} className={styles.vitrinaPhoneItem + ' ' + posClass}>
-                          <div className={styles.vitrinaPhoneFrame}>
-                          <div className={styles.vitrinaStatusBar}>
-                            <span className={styles.vitrinaStatusTime}>4:16</span>
-                            <div className={styles.vitrinaNotch} aria-hidden />
-                            <span className={styles.vitrinaStatusIcons} aria-hidden>
-                              ▐▐ ≋ ▮
-                            </span>
-                          </div>
-                          <div className={styles.vitrinaScreen}>
-                            <img
-                              src={item.src}
-                              alt=""
-                              className={styles.vitrinaScreenImg}
-                              draggable={false}
-                            />
-                          </div>
-                          <div className={styles.vitrinaHomeBar}>
-                            <span className={styles.vitrinaHomePill} aria-hidden />
-                          </div>
-                        </div>
-                        <div
-                          className={
-                            styles.vitrinaSlotLabel +
-                            (slot === 2 ? ' ' + styles.vitrinaSlotLabelOn : '')
-                          }
-                        >
-                          <p className={styles.vitrinaSlotName}>{item.name}</p>
-                          <p className={styles.vitrinaSlotCat}>{item.category}</p>
-                        </div>
-                      </div>
-                      );
-                    })}
-                  </div>
-
-                  <button
-                    type="button"
-                    className={styles.vitrinaArrow + ' ' + styles.vitrinaArrowRight}
-                    aria-label="Siguiente"
-                    onClick={function () {
-                      setActive(function (i) {
-                        return (i + 1) % VITRINA_ITEMS.length;
-                      });
-                    }}
-                  >
-                    →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.sectionWorld} aria-labelledby="world-heading">
-          <div className={styles.container}>
-            <h2 id="world-heading" className={styles.sectionTitle}>
-              Landings para cualquier industria, en cualquier parte del mundo
-            </h2>
-            <p className={styles.sectionWorldSub}>Colombia o el exterior: mismo estándar para tu negocio.</p>
-            <div className={styles.worldGrid}>
-              <div className={styles.worldColGlobe}>
-                <GlobeWithPins />
-              </div>
-            </div>
-          </div>
-        </section>
+        <LandingsGlobeSection />
 
         <section className={styles.sectionResponsive} aria-labelledby="responsive-heading">
           <div className={styles.container}>

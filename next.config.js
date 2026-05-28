@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  transpilePackages: ['@splinetool/react-spline', '@splinetool/runtime'],
   async headers() {
     return [
       {

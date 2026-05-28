@@ -1,0 +1,33 @@
+.section {
+  padding: 0 20px;
+  background: var(--color-bg, #0a0a14);
+}
+
+.wrap {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+}
+
+.canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 240px;
+  aspect-ratio: 1 / 1;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.88rem;
+}
+
+@media (min-width: 768px) {
+  .wrap {
+    max-width: 360px;
+  }
+}
