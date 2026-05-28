@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Check, Minus, Rocket, Building2, ShoppingCart } from 'lucide-react';
-import { FallingPattern } from './FallingPattern';
+import { BeamsBackground } from '@/components/ui/beams-background';
 import LandingsGlobeSection from '@/components/landings/LandingsGlobeSection';
+import LandingsVibrantPitch from '@/components/landings/LandingsVibrantPitch';
 import LandingsVitrinaCarousel from '@/components/landings/LandingsVitrinaCarousel';
+import vibrant from '@/components/landings/vibrantType.module.css';
 import styles from './page.module.css';
 
 const WA_PRIMARY = 'https://wa.me/573105813007';
@@ -392,17 +394,7 @@ export default function LandingsPage() {
   }, []);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.pageFallingLayer} aria-hidden="true">
-        <FallingPattern
-          color="rgba(124, 58, 237, 0.4)"
-          backgroundColor="#0a0a0a"
-          duration={150}
-          blurIntensity="1em"
-          density={1}
-          className={styles.pageFallingInner}
-        />
-      </div>
+    <BeamsBackground intensity="medium" className={styles.page}>
       <main className={styles.pageMain}>
         <section className={styles.hero} ref={heroSectionRef}>
           <canvas className={styles.heroCanvas} ref={heroCanvasRef} aria-hidden="true" />
@@ -418,28 +410,18 @@ export default function LandingsPage() {
               </p>
               <div className={styles.heroTitleWrap}>
                 <div className={styles.heroTitleGlow} aria-hidden="true" />
-                <h1 className={styles.heroTitle}>
+                <h1 className={`${styles.heroTitle} ${vibrant.headlineHero}`}>
                   Tu negocio necesita
                   <br />
                   <span className={styles.heroTitleLine2}>
-                    una página <span className={styles.heroTitleGradient}>que venda</span>
+                    una página <span className={vibrant.accentCoral}>que venda</span>
                   </span>
                 </h1>
               </div>
-              <p
-                style={{
-                  margin: '0 auto',
-                  maxWidth: 360,
-                  width: '100%',
-                  fontSize: 14,
-                  color: '#94a3b8',
-                  lineHeight: 1.7,
-                  textAlign: 'center',
-                }}
-              >
-                Diseño profesional, entrega en 3 días y
-                <br />
-                todo el proceso por WhatsApp. Sin vueltas.
+              <p className={`${styles.heroSub} ${vibrant.body}`}>
+                Diseño profesional, entrega en{' '}
+                <span className={vibrant.accentGreen}>3 días</span> y todo el proceso por
+                WhatsApp. Sin vueltas.
               </p>
 
               <div className={styles.heroPriceRibbon}>
@@ -497,6 +479,8 @@ export default function LandingsPage() {
           </div>
         </section>
 
+        <LandingsVibrantPitch />
+
         <section aria-labelledby="sale-web-heading">
           <style
             dangerouslySetInnerHTML={{
@@ -551,18 +535,8 @@ export default function LandingsPage() {
             >
               Una página pensada para una sola cosa:
             </p>
-            <h2
-              id="sale-web-heading"
-              style={{
-                margin: '0 0 1.5rem',
-                fontSize: 'clamp(1.6rem, 5vw, 2.2rem)',
-                fontWeight: 900,
-                color: '#fff',
-                lineHeight: 1.15,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Que el cliente te contacte.
+            <h2 id="sale-web-heading" className={vibrant.headlineSm} style={{ margin: '0 0 1.5rem' }}>
+              Que el cliente te <span className={vibrant.accentCoral}>contacte</span>.
             </h2>
 
             <div
@@ -610,8 +584,8 @@ export default function LandingsPage() {
 
         <section className={styles.sectionIncludes} aria-labelledby="includes-heading">
           <div className={styles.container}>
-            <h2 id="includes-heading" className={styles.sectionTitle}>
-              Todo lo que necesitas, sin pagar de más
+            <h2 id="includes-heading" className={`${styles.sectionTitle} ${vibrant.headlineSm}`}>
+              Todo lo que necesitas, sin <span className={vibrant.accentCoral}>pagar de más</span>
             </h2>
             <div className={styles.includeGrid}>
               {INCLUDE_CARDS.map(function (item) {
@@ -635,8 +609,8 @@ export default function LandingsPage() {
 
         <section className={styles.sectionResponsive} aria-labelledby="responsive-heading">
           <div className={styles.container}>
-            <h2 id="responsive-heading" className={styles.sectionTitle}>
-              Se ve perfecto en cualquier pantalla
+            <h2 id="responsive-heading" className={`${styles.sectionTitle} ${vibrant.headlineSm}`}>
+              Se ve <span className={vibrant.accentGreen}>perfecto</span> en cualquier pantalla
             </h2>
             <p className={styles.responsiveSubtitle}>
               Tus clientes te encuentran desde el celular o el computador
@@ -754,8 +728,8 @@ export default function LandingsPage() {
 
         <section className={styles.sectionProcess} aria-labelledby="process-heading">
           <div className={styles.container}>
-            <h2 id="process-heading" className={styles.sectionTitle}>
-              Así de fácil funciona
+            <h2 id="process-heading" className={`${styles.sectionTitle} ${vibrant.headlineSm}`}>
+              Así de <span className={vibrant.accentGreen}>fácil</span> funciona
             </h2>
             <ol className={styles.processList}>
               {PROCESS_STEPS.map(function (step) {
@@ -777,11 +751,12 @@ export default function LandingsPage() {
 
         <section className={styles.sectionOrbit} aria-labelledby="orbit-tech-heading">
           <div className={styles.container}>
-            <h2 id="orbit-tech-heading" className={styles.sectionTitle}>
-              Construido con tecnología de primer nivel
+            <h2 id="orbit-tech-heading" className={`${styles.sectionTitle} ${vibrant.headlineSm}`}>
+              Construido con <span className={vibrant.accentCoral}>tecnología</span> de primer nivel
             </h2>
-            <p className={styles.sectionOrbitSub}>
-              Las mismas herramientas que usan las empresas más grandes del mundo
+            <p className={`${styles.sectionOrbitSub} ${vibrant.body}`}>
+              Las mismas herramientas que usan las empresas más{' '}
+              <span className={vibrant.accentGreen}>grandes del mundo</span>
             </p>
             <div className={styles.orbitGrid}>
               <div className={styles.orbitTextCol}>
@@ -832,17 +807,10 @@ export default function LandingsPage() {
           />
           <h2
             id="complex-pricing-heading"
-            style={{
-              margin: '0 0 0.5rem',
-              textAlign: 'center',
-              fontSize: 'clamp(1.35rem, 4vw, 1.85rem)',
-              fontWeight: 800,
-              letterSpacing: '-0.02em',
-              color: '#f8fafc',
-              lineHeight: 1.15,
-            }}
+            className={vibrant.headlineSm}
+            style={{ margin: '0 0 0.5rem' }}
           >
-            ¿Necesitas algo más complejo?
+            ¿Necesitas algo más <span className={vibrant.accentCoral}>complejo</span>?
           </h2>
           <p
             style={{
@@ -1392,7 +1360,7 @@ export default function LandingsPage() {
 
         <section className={styles.sectionFinalCta} aria-labelledby="final-cta-heading">
           <h2 id="final-cta-heading" className={styles.finalCtaTitle}>
-            ¿Listo para vender más?
+            ¿Listo para <span className={vibrant.accentGreen}>vender más</span>?
           </h2>
           <p className={styles.finalCtaSub}>Escríbenos hoy y en 3 días tienes tu página lista.</p>
           <a className={styles.btnFinalWhatsApp} href={WA_PRIMARY} target="_blank" rel="noopener noreferrer">
@@ -1407,6 +1375,6 @@ export default function LandingsPage() {
       <footer className={styles.footer}>
         <p className={styles.footerText}>Fluxa · Colombia</p>
       </footer>
-    </div>
+    </BeamsBackground>
   );
 }

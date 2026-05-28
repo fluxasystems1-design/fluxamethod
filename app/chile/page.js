@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import ChileCatalogTabs from '@/components/chile/ChileCatalogTabs';
+import ChileServiceBlocks from '@/components/chile/ChileServiceBlocks';
 import ChileCollaborationLottie from '@/components/chile/ChileCollaborationLottie';
 import ChileHero from '@/components/chile/ChileHero';
+import chileVibrant from '@/components/chile/chileVibrant.module.css';
+import ChilePageLoader from '@/components/chile/ChilePageLoader';
 import ChileWhatsAppFloat from '@/components/chile/ChileWhatsAppFloat';
 import ChileSection from '@/components/chile/ChileSection';
 import LandingsGlobeSection from '@/components/landings/LandingsGlobeSection';
@@ -96,6 +98,7 @@ const processStep = {
 
 export default function ChileLandingPage() {
   const [headerScrolled, setHeaderScrolled] = useState(false);
+  const [pageRevealed, setPageRevealed] = useState(false);
 
   useEffect(function () {
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -116,7 +119,11 @@ export default function ChileLandingPage() {
   }, []);
 
   return (
-    <div className={styles.wrap}>
+    <>
+      <ChilePageLoader onReveal={() => setPageRevealed(true)} />
+      <div
+        className={`${styles.wrap} ${pageRevealed ? styles.wrapRevealed : styles.wrapPending}`}
+      >
       <header className={`${styles.header} ${headerScrolled ? styles.headerScrolled : ''}`}>
         <Link href="/chile" className={styles.headerLogo}>
           <Image
@@ -149,8 +156,15 @@ export default function ChileLandingPage() {
         <ChileHero />
 
         <ChileSection className={styles.intro} id="intro">
-          <h2 className={styles.introTitle}>No importa qué construiste.</h2>
-          <p className={styles.introAccent}>Nosotros lo hacemos escalar.</p>
+          <h2 className={`${styles.introTitle} ${chileVibrant.headlineSm}`}>
+            No importa qué <span className={chileVibrant.accentPurple}>construiste</span>.
+          </h2>
+          <p
+            className={`${styles.introAccent} ${chileVibrant.headlineSm}`}
+            style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.65rem)', marginBottom: 14 }}
+          >
+            Nosotros lo hacemos <span className={chileVibrant.accentCyan}>escalar</span>.
+          </p>
           <p className={styles.introBody}>
             Trabajamos con emprendedores, marcas personales, negocios locales, influencers, traders,
             coaches y empresas que quieren dejar de operar manualmente. Si tienes audiencia, una idea
@@ -163,16 +177,21 @@ export default function ChileLandingPage() {
           </p>
         </ChileSection>
 
+        <ChileServiceBlocks />
+
         <ChileCollaborationLottie />
 
-        <ChileSection className={styles.audience} id="para-quien">
+        <ChileSection className={`${styles.audience} ${chileVibrant.glowSection}`} id="para-quien">
           <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>Sistemas que escalan. Tecnología que no falla.</h2>
+            <h2 className={`${styles.sectionTitle} ${chileVibrant.headlineSm}`}>
+              Sistemas que <span className={chileVibrant.accentPurple}>escalan</span>. Tecnología que{' '}
+              <span className={chileVibrant.accentCyan}>no falla</span>.
+            </h2>
             <div className={styles.audienceGrid}>
               {AUDIENCE.map((card, index) => (
                 <motion.article
                   key={card.title}
-                  className={styles.audienceCard}
+                  className={`${styles.audienceCard} ${chileVibrant.glowCard}`}
                   custom={index}
                   variants={audienceCard}
                   initial="hidden"
@@ -189,8 +208,6 @@ export default function ChileLandingPage() {
             </div>
           </div>
         </ChileSection>
-
-        <ChileCatalogTabs />
 
         <ChileSection className={styles.midCta} id="cotizar-catalogo">
           <p className={styles.midCtaText}>¿Ya sabes qué categoría necesitas?</p>
@@ -216,7 +233,9 @@ export default function ChileLandingPage() {
 
         <ChileSection className={styles.process} id="proceso">
           <div className={styles.container}>
-            <h2 className={styles.sectionTitle}>Así trabajamos</h2>
+            <h2 className={`${styles.sectionTitle} ${chileVibrant.headlineSm}`}>
+              Así <span className={chileVibrant.accentPurple}>trabajamos</span>
+            </h2>
             <p className={styles.processLead}>Primera propuesta en 48–72 h · Entrega según alcance acordado</p>
             <ol className={styles.processList}>
               {PROCESS.map((step, index) => (
@@ -244,7 +263,9 @@ export default function ChileLandingPage() {
           <div className={styles.pageEndFlow}>
             <ChileSection className={styles.ctaFinal} id="cotizar">
               <div className={styles.pageEndContent}>
-                <h2 className={styles.ctaTitle}>¿Tienes un proyecto en mente?</h2>
+                <h2 className={`${styles.ctaTitle} ${chileVibrant.headlineSm}`}>
+                  ¿Tienes un <span className={chileVibrant.accentPurple}>proyecto</span> en mente?
+                </h2>
                 <p className={styles.ctaSub}>
                   Cuéntanos qué necesitas construir. Sin compromiso — primero entendemos tu visión y
                   luego te decimos exactamente cómo lo hacemos realidad.
@@ -305,6 +326,7 @@ export default function ChileLandingPage() {
       </main>
 
       <ChileWhatsAppFloat className={styles.waFloatLeft} />
-    </div>
+      </div>
+    </>
   );
 }

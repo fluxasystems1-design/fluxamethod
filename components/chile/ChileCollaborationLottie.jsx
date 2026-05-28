@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useReducedMotion } from 'framer-motion';
 import { CHILE_HERO_LOTTIE_SRC } from '@/lib/chile/lottie';
+import chileVibrant from './chileVibrant.module.css';
 import styles from './ChileCollaborationLottie.module.css';
 
 const DotLottieReact = dynamic(
@@ -18,7 +19,7 @@ export default function ChileCollaborationLottie() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className={styles.section} aria-hidden>
+    <section className={`${styles.section} ${chileVibrant.glowSection}`} aria-hidden>
       <div className={styles.wrap}>
         <DotLottieReact
           src={CHILE_HERO_LOTTIE_SRC}

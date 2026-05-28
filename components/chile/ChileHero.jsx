@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { CHILE_ASTRONAUT_SRC, CHILE_WA_HREF } from '@/lib/chile/brand';
+import chileVibrant from './chileVibrant.module.css';
 import styles from './ChileHero.module.css';
 
 const stagger = {
@@ -52,12 +53,12 @@ export default function ChileHero() {
           initial={reduceMotion ? false : 'hidden'}
           animate={reduceMotion ? false : 'show'}
         >
-          <motion.p className={styles.label} variants={fadeUp}>
+          <motion.p className={`${styles.label} ${chileVibrant.labelCaps}`} variants={fadeUp}>
             Fluxa Method — Arquitectura digital
           </motion.p>
-          <motion.h1 className={styles.title} variants={fadeUp}>
+          <motion.h1 className={`${styles.title} ${chileVibrant.headlineHero}`} variants={fadeUp}>
             <span className={styles.titleLine}>Tu visión convertida</span>
-            <span className={styles.titleAccent}>en tecnología que funciona sola.</span>
+            <span className={chileVibrant.accentPurple}>en tecnología que funciona sola.</span>
           </motion.h1>
           <motion.div className={styles.actions} variants={fadeUp}>
             <a

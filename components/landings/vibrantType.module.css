@@ -1,0 +1,64 @@
+/* Tipografía vibrante — landings (coral + verde neón + glow) */
+
+.headlineHero {
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.headline {
+  margin: 0;
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.65rem, 6vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.headlineSm {
+  margin: 0 0 12px;
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.45rem, 4.8vw, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.body {
+  margin: 0 auto;
+  max-width: 36rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: clamp(0.95rem, 2.8vw, 1.125rem);
+  font-weight: 500;
+  line-height: 1.65;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.accentCoral {
+  color: #ff5c77;
+  text-shadow:
+    0 0 20px rgba(255, 92, 119, 0.55),
+    0 0 40px rgba(255, 92, 119, 0.28);
+}
+
+.accentGreen {
+  color: #00ff88;
+  text-shadow:
+    0 0 18px rgba(0, 255, 136, 0.5),
+    0 0 36px rgba(0, 255, 136, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accentCoral,
+  .accentGreen {
+    text-shadow: none;
+  }
+}

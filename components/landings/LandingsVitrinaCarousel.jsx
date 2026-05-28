@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './landingsShowcase.module.css';
+import chileVibrant from '@/components/chile/chileVibrant.module.css';
+import vibrant from './vibrantType.module.css';
 
 export const VITRINA_ITEMS = [
   {
@@ -32,12 +34,20 @@ const POS_CLASSES = [
 export default function LandingsVitrinaCarousel({
   id = 'ejemplos',
   headingId = 'examples-heading',
-  title = 'Estas landings ya venden. La tuya puede ser la próxima.',
-  subtitle = 'Landings que convierten para cada nicho',
+  title,
+  subtitle,
   className = '',
   hideArrows = false,
   compact = false,
+  /** Dentro de otro bloque (ej. /chile catálogo) — sin borde de sección */
+  embed = false,
+  /** 'fluxa' = acentos púrpura/cian; 'landings' = coral/verde */
+  accentTheme = 'landings',
 }) {
+  const typeStyles = accentTheme === 'fluxa' ? chileVibrant : vibrant;
+  const accentHighlight = accentTheme === 'fluxa' ? chileVibrant.accentPurple : vibrant.accentCoral;
+  const accentHighlightAlt =
+    accentTheme === 'fluxa' ? chileVibrant.accentCyan : vibrant.accentGreen;
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const intervalRef = useRef(null);
@@ -60,21 +70,38 @@ export default function LandingsVitrinaCarousel({
     [paused]
   );
 
+  const Wrapper = embed ? 'div' : 'section';
+
   return (
-    <section
+    <Wrapper
       className={
         styles.sectionExamples +
+        (embed ? ` ${styles.sectionExamplesEmbed}` : '') +
         (compact ? ` ${styles.sectionExamplesCompact}` : '') +
         (className ? ` ${className}` : '')
       }
-      id={id}
-      aria-labelledby={headingId}
+      {...(embed ? {} : { id, 'aria-labelledby': headingId })}
     >
       <div className={styles.container}>
-        <h2 id={headingId} className={styles.carouselSectionTitle}>
-          {title}
+        <h2
+          id={embed ? undefined : headingId}
+          className={`${styles.carouselSectionTitle} ${typeStyles.headlineSm}`}
+        >
+          {title ?? (
+            <>
+              Estas landings ya venden. La tuya puede ser la{' '}
+              <span className={accentHighlight}>próxima</span>.
+            </>
+          )}
         </h2>
-        <p className={styles.carouselSectionSub}>{subtitle}</p>
+        <p className={`${styles.carouselSectionSub} ${typeStyles.body}`}>
+          {subtitle ?? (
+            <>
+              Landings que <span className={accentHighlightAlt}>convierten</span> para cada
+              nicho
+            </>
+          )}
+        </p>
 
         <div
           className={styles.vitrinaShowcase}
@@ -161,6 +188,6 @@ export default function LandingsVitrinaCarousel({
           </div>
         </div>
       </div>
-    </section>
+    </Wrapper>
   );
 }

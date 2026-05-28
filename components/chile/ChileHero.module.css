@@ -5,8 +5,18 @@
   flex-direction: column;
   padding: 50px 16px 0;
   box-sizing: border-box;
-  background: var(--color-bg, #0a0a14);
+  background: transparent;
   overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 20%, rgba(160, 32, 240, 0.2), transparent 62%),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(0, 130, 255, 0.1), transparent 55%);
 }
 
 .stage {
@@ -71,13 +81,19 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 12px 0 20px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 12px;
-  align-items: end;
+  text-align: center;
 }
 
 .copyMain {
-  max-width: 520px;
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .label {
@@ -91,10 +107,7 @@
 
 .title {
   margin: 0 0 14px;
-  font-weight: 800;
   font-size: clamp(1.65rem, 5.5vw, 2.35rem);
-  line-height: 1.12;
-  letter-spacing: -0.02em;
 }
 
 .titleLine {
@@ -112,20 +125,23 @@
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .btnPrimary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 12px 24px;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 0.92rem;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  white-space: nowrap;
   text-decoration: none;
   color: #ffffff;
   background: var(--gradient-brand, linear-gradient(135deg, #a020f0, #0082ff));
@@ -137,18 +153,21 @@
 
 .btnPrimary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(160, 32, 240, 0.5);
+  box-shadow:
+    0 0 48px rgba(160, 32, 240, 0.55),
+    0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 .btnGhost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 12px 22px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.92rem;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.84rem;
+  white-space: nowrap;
   text-decoration: none;
   color: #ffffff;
   border: 1px solid rgba(0, 224, 255, 0.45);
@@ -185,21 +204,32 @@
   }
 
   .content {
-    grid-template-columns: 1fr auto;
-    gap: 16px 32px;
     padding-bottom: 28px;
+    gap: 14px;
   }
 
   .copyAside {
     display: block;
     margin: 0;
-    max-width: 260px;
+    max-width: 420px;
     font-size: 0.88rem;
     line-height: 1.5;
     color: rgba(255, 255, 255, 0.55);
-    justify-self: end;
-    text-align: right;
-    padding-bottom: 4px;
+    text-align: center;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .actions {
+    gap: 8px;
+  }
+
+  .btnPrimary,
+  .btnGhost {
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
   }
 }
 

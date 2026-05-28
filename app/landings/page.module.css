@@ -1,30 +1,13 @@
 /* Landings Fluxa — mobile first, Inter desde layout global */
 
 .page {
-  position: relative;
-  min-height: 100vh;
-  background: transparent;
   color: #f8fafc;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-.pageFallingLayer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.pageFallingInner {
-  width: 100%;
-  min-height: 100vh;
-  height: 100%;
-}
-
 .pageMain {
   position: relative;
-  z-index: 1;
 }
 
 /* ——— Hero ——— */
@@ -52,7 +35,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 0%, transparent 20%, #0a0a0a 75%);
+  background: radial-gradient(ellipse at 50% 0%, transparent 30%, rgba(10, 10, 10, 0.45) 85%);
 }
 
 .heroInner {
@@ -124,7 +107,8 @@
   pointer-events: none;
   background: radial-gradient(
     ellipse 600px 400px at 50% 40%,
-    rgba(124, 58, 237, 0.12) 0%,
+    rgba(255, 92, 119, 0.14) 0%,
+    rgba(0, 255, 136, 0.06) 35%,
     transparent 70%
   );
 }
@@ -134,10 +118,6 @@
   z-index: 1;
   margin: 0;
   font-size: clamp(2.6rem, 8vw, 4.8rem);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: #ffffff;
 }
 
 .heroTitleLine2 {
@@ -362,11 +342,6 @@
 
 .sectionTitle {
   margin: 0 0 12px;
-  font-size: clamp(1.5rem, 4.5vw, 2.25rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  text-align: center;
-  line-height: 1.15;
 }
 
 /* ——— Qué incluye ——— */
@@ -1384,10 +1359,12 @@
 
 .finalCtaTitle {
   margin: 0 0 8px;
+  font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   font-size: clamp(1.75rem, 5vw, 2.75rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  text-align: center;
 }
 
 .finalCtaSub {

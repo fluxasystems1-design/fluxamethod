@@ -1,0 +1,43 @@
+.root {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: clip;
+  background: #0a0a0a;
+  color: #f8fafc;
+}
+
+.canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(15px);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(10, 10, 10, 0.08);
+  backdrop-filter: blur(50px);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    display: none;
+  }
+
+  .overlay {
+    backdrop-filter: none;
+    background: rgba(10, 10, 10, 0.4);
+  }
+}
