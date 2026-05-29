@@ -8,6 +8,7 @@ import {
   CHILE_DASHBOARD_VIDEO_SRC,
   CHILE_ROBOT_FLUJO_SRC,
   CHILE_SOFTWARE_SRC,
+  CHILE_WA_HREF,
 } from '@/lib/chile/brand';
 import LandingsVitrinaCarousel from '@/components/landings/LandingsVitrinaCarousel';
 import vitrinaStyles from '@/components/landings/landingsShowcase.module.css';
@@ -15,8 +16,6 @@ import chileVibrant from './chileVibrant.module.css';
 import ChileSection from './ChileSection';
 import ChileVoiceWaveVisual from './ChileVoiceWaveVisual';
 import styles from './ChileServiceBlocks.module.css';
-
-const COTIZAR_HREF = 'https://wa.me/573116425337';
 
 /** Catálogo visual — 8 bloques alternados imagen / texto */
 const SERVICE_BLOCKS = [
@@ -248,7 +247,7 @@ function ServiceBlockText({ block }) {
         ))}
       </ul>
       <a
-        href={COTIZAR_HREF}
+        href={CHILE_WA_HREF}
         className={styles.ctaOutline}
         target="_blank"
         rel="noopener noreferrer"
@@ -274,7 +273,7 @@ function ServiceBlock6Content({ block }) {
         </ul>
         <div className={styles.appCtaRow}>
           <a
-            href={COTIZAR_HREF}
+            href={CHILE_WA_HREF}
             className={styles.ctaOutline}
             target="_blank"
             rel="noopener noreferrer"
@@ -321,7 +320,7 @@ function ServiceBlock3Content({ block }) {
           />
         </div>
         <a
-          href={COTIZAR_HREF}
+          href={CHILE_WA_HREF}
           className={styles.ctaOutline}
           target="_blank"
           rel="noopener noreferrer"
