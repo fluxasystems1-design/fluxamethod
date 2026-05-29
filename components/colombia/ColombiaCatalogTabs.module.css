@@ -1,0 +1,170 @@
+/* SECCIÓN 4 — Catálogo · tabs horizontales */
+.section {
+  padding: 40px 16px 48px;
+  background: var(--color-bg, #0a0a14);
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 48px 20px 56px;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  text-align: center;
+  color: var(--color-text, #ffffff);
+  line-height: 1.15;
+}
+
+.sub {
+  margin: 0 0 24px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  line-height: 1.5;
+  padding: 0 4px;
+}
+
+/* ——— Barra de tabs ——— */
+.tabBar {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tabBar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 12px 24px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.tab:hover {
+  color: rgba(255, 255, 255, 0.7);
+  border-bottom-color: rgba(160, 32, 240, 0.3);
+}
+
+.tab.active {
+  color: #ffffff;
+  border-bottom-color: transparent;
+  text-shadow: 0 0 24px rgba(160, 32, 240, 0.35);
+  transform: translateY(-1px);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #a020f0, #0082ff);
+  pointer-events: none;
+}
+
+.tabDivider {
+  width: 100%;
+  height: 1px;
+  margin: 0 0 28px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ——— Contenido del tab ——— */
+.tabContent {
+  animation: catalogFadeIn 0.3s ease forwards;
+}
+
+@keyframes catalogFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.categoryTitle {
+  margin: 0 0 10px;
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.categoryDesc {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #94a3b8;
+  max-width: 720px;
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .itemsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+.itemCard {
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: #111111;
+  border: 1px solid #1a1a1a;
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #ffffff;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.itemCard:hover {
+  background: #150a20;
+  border-color: #1a1a1a;
+  border-left-color: #a020f0;
+}

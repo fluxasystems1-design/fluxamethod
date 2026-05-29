@@ -1,0 +1,269 @@
+/* HERO — título FLUXA de fondo + astronauta */
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 50px 16px 0;
+  box-sizing: border-box;
+  background: transparent;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 20%, rgba(160, 32, 240, 0.2), transparent 62%),
+    radial-gradient(ellipse 60% 50% at 80% 90%, rgba(0, 130, 255, 0.1), transparent 55%);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: -20px auto 0;
+  line-height: 0;
+}
+
+.bgTitleRow {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4.5rem, 20vw, 13rem);
+  width: max-content;
+  max-width: 100%;
+  margin: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bgTitlePart {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(4.5rem, 24vw, 13.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.figureWrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  line-height: normal;
+}
+
+.astronaut {
+  width: auto !important;
+  max-width: min(92vw, 480px);
+  height: auto !important;
+  max-height: clamp(200px, 36vh, 380px);
+  margin-top: -28px;
+  object-fit: contain;
+  object-position: top center;
+  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.45));
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.copyMain {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.label {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent, #00e0ff);
+}
+
+.title {
+  margin: 0 0 14px;
+  font-size: clamp(1.65rem, 5.5vw, 2.35rem);
+}
+
+.titleLine {
+  display: block;
+  color: var(--color-text, #ffffff);
+}
+
+.titleAccent {
+  display: block;
+  background: var(--gradient-brand, linear-gradient(135deg, #a020f0, #0082ff));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #ffffff;
+  background: var(--gradient-brand, linear-gradient(135deg, #a020f0, #0082ff));
+  box-shadow: 0 4px 24px rgba(160, 32, 240, 0.4);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 48px rgba(160, 32, 240, 0.55),
+    0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.84rem;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #ffffff;
+  border: 1px solid rgba(0, 224, 255, 0.45);
+  background: transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btnGhost:hover {
+  background: rgba(0, 224, 255, 0.08);
+  border-color: var(--color-accent, #00e0ff);
+}
+
+.copyAside {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 54px 32px 0;
+  }
+
+  .stage {
+    margin-top: -16px;
+  }
+
+  .astronaut {
+    margin-top: -32px;
+  }
+
+  .astronaut {
+    max-height: clamp(280px, 40vh, 400px);
+  }
+
+  .content {
+    padding-bottom: 28px;
+    gap: 14px;
+  }
+
+  .copyAside {
+    display: block;
+    margin: 0;
+    max-width: 420px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.55);
+    text-align: center;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .actions {
+    gap: 8px;
+  }
+
+  .btnPrimary,
+  .btnGhost {
+    min-height: 36px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-top: 48px;
+  }
+
+  .stage {
+    margin-top: -24px;
+  }
+
+  .astronaut {
+    margin-top: -32px;
+  }
+
+  .bgTitleRow {
+    gap: clamp(3.25rem, 26vw, 5.5rem);
+    top: 52%;
+  }
+
+  .bgTitlePart {
+    font-size: clamp(3.5rem, 22vw, 5rem);
+    letter-spacing: -0.03em;
+  }
+
+  .astronaut {
+    max-height: clamp(180px, 32vh, 260px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btnPrimary,
+  .btnGhost {
+    transition: none;
+  }
+}

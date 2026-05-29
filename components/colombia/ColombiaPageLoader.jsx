@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import styles from './ChilePageLoader.module.css';
+import styles from './ColombiaPageLoader.module.css';
 
 const SPLASH_MS = 1500;
 const FADE_MS = 500;
@@ -9,10 +9,10 @@ const FADE_MS = 500;
 const MAX_WAIT_MS = 4500;
 
 /**
- * Splash inicial /chile — no espera imágenes/video pesados (evita quedar trabado).
+ * Splash inicial /colombia — no espera imágenes/video pesados (evita quedar trabado).
  * @param {() => void} [onReveal] — dispara fade-in del contenido de la página
  */
-export default function ChilePageLoader({ onReveal }) {
+export default function ColombiaPageLoader({ onReveal }) {
   const onRevealRef = useRef(onReveal);
   onRevealRef.current = onReveal;
 

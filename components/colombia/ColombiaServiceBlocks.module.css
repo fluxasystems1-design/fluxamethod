@@ -1,0 +1,477 @@
+/* Catálogo visual — bloques alternados imagen / texto */
+
+.section {
+  padding: 0;
+  border-top: 1px solid rgba(160, 32, 240, 0.15);
+}
+
+.sectionHead {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 20px 20px;
+  text-align: center;
+}
+
+.h2 {
+  margin: 0 0 6px;
+  font-size: clamp(1.65rem, 4.5vw, 2.25rem);
+}
+
+.sub {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.blocks {
+  width: 100%;
+}
+
+.blockWrap {
+  width: 100%;
+}
+
+.separator {
+  margin: 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* —— Bloque base —— */
+.block {
+  width: 100%;
+  overflow: visible;
+}
+
+.blockInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.blockInnerCompact {
+  min-height: 0;
+}
+
+/* Bloque 6 — app visual junto al botón cotizar */
+.blockAppLayout {
+  width: 100%;
+}
+
+.blockInnerApp {
+  width: 100%;
+  min-height: 0;
+}
+
+.textColApp {
+  padding: 28px 28px 32px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(20, 8, 32, 0.55) 0%, rgba(10, 10, 20, 0.2) 100%);
+}
+
+.appCtaRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.appCtaRow .ctaOutline {
+  flex-shrink: 0;
+}
+
+.appVisual {
+  flex-shrink: 0;
+  width: clamp(110px, 28vw, 220px);
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 10px 28px rgba(160, 32, 240, 0.35));
+}
+
+/* Bloque 8 — solo texto, sin imagen */
+.blockTextOnly {
+  width: 100%;
+}
+
+.blockInnerTextOnly {
+  width: 100%;
+  min-height: 0;
+}
+
+.blockInnerTextOnly .textCol {
+  width: 100%;
+}
+
+/* Bloque 3 — IA: robot junto a la etiqueta */
+.blockIALayout {
+  width: 100%;
+}
+
+.blockInnerIA {
+  width: 100%;
+  min-height: 0;
+}
+
+.textColIA {
+  padding: 28px 28px 32px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(20, 8, 32, 0.55) 0%, rgba(10, 10, 20, 0.2) 100%);
+}
+
+.iaListRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.iaListRow .itemList {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.iaMascot {
+  flex-shrink: 0;
+  width: clamp(96px, 26vw, 168px);
+  height: auto;
+  align-self: center;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 10px 28px rgba(160, 32, 240, 0.4));
+}
+
+.imageCol,
+.textCol {
+  min-width: 0;
+}
+
+/* Imagen izquierda (bloques 1, 3, 5, 7) */
+.imageLeft .imageCol {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.imageLeft .textCol {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Imagen derecha (bloques 2, 4, 6, 8) */
+.imageRight .imageCol {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.imageRight .textCol {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* Placeholder — listo para <img> o background-image */
+.imagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.placeholderText {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+/* Bloque 1 — creativo vitrina /landings */
+.blockVitrina {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: clamp(460px, 52vh, 580px);
+  padding: 12px 4px 16px;
+  overflow: visible;
+}
+
+.blockInnerVitrina {
+  min-height: clamp(460px, 52vh, 580px);
+}
+
+.embeddedVitrina {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Panel con imagen estática */
+.blockImagePanel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.blockImagePanelTight {
+  min-height: 0;
+  padding: 6px 4px 6px 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageLeft .blockImagePanelTight {
+  padding-right: 2px;
+  padding-left: 12px;
+}
+
+.imageRight .blockImagePanelTight {
+  padding-left: 2px;
+  padding-right: 12px;
+}
+
+.blockImageTight {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: min(360px, 58vh);
+  object-fit: contain;
+  object-position: center center;
+}
+
+.blockVideoPanel {
+  padding: 8px 4px 8px 12px;
+}
+
+.blockVideo {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(360px, 58vh);
+  border-radius: 10px;
+  object-fit: contain;
+  object-position: center center;
+  background: #0a0a14;
+}
+
+/* Texto */
+.textCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 28px 32px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(20, 8, 32, 0.55) 0%, rgba(10, 10, 20, 0.2) 100%);
+}
+
+.imageLeft .textCol {
+  padding-left: 22px;
+  padding-right: 32px;
+}
+
+.imageRight .textCol {
+  padding-left: 32px;
+  padding-right: 22px;
+}
+
+.label {
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  background: linear-gradient(90deg, #a020f0, #0082ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.blockTitle {
+  margin: 0 0 10px;
+  font-size: 32px;
+}
+
+.blockDesc {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.itemList {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.itemList li {
+  margin-bottom: 5px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #cbd5e1;
+}
+
+.itemList li::marker {
+  color: #00e0ff;
+}
+
+/* Botón outline con borde gradiente */
+.ctaOutline {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 1px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #a020f0, #0082ff);
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ctaOutline:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.ctaOutlineInner {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 9px;
+  background: linear-gradient(160deg, #140a20 0%, #0a0a14 100%);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  box-shadow: 0 0 24px rgba(160, 32, 240, 0.2);
+}
+
+.ctaOutline:hover .ctaOutlineInner {
+  background: linear-gradient(160deg, #1c0d2a 0%, #0f0818 100%);
+  box-shadow: 0 0 32px rgba(160, 32, 240, 0.35);
+}
+
+/* Mobile — texto arriba, creativo/imagen abajo */
+@media (max-width: 767px) {
+  .sectionHead {
+    padding: 28px 16px 16px;
+  }
+
+  .blockInner {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    row-gap: 0;
+  }
+
+  .imageLeft .textCol,
+  .imageRight .textCol {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .imageLeft .imageCol,
+  .imageRight .imageCol {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .blockVitrina,
+  .blockInnerVitrina {
+    min-height: clamp(380px, 95vw, 460px);
+  }
+
+  .blockVitrina {
+    padding: 8px 0 12px;
+  }
+
+  .blockImagePanelTight {
+    padding: 6px 8px 8px;
+  }
+
+  .imageLeft .blockImagePanelTight,
+  .imageRight .blockImagePanelTight {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .blockImageTight,
+  .blockVideo {
+    max-height: min(280px, 64vw);
+  }
+
+  .blockVideoPanel {
+    padding: 6px;
+  }
+
+  .textCol,
+  .imageLeft .textCol,
+  .imageRight .textCol {
+    padding: 22px 18px 8px;
+  }
+
+  .textColIA {
+    padding: 22px 16px 8px;
+  }
+
+  .textColApp {
+    padding: 22px 16px 20px;
+  }
+
+  .appCtaRow {
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .appVisual {
+    width: clamp(100px, 32vw, 160px);
+  }
+
+  .blockInnerTextOnly .textCol {
+    padding: 22px 18px 24px;
+  }
+
+  .iaListRow {
+    gap: 6px;
+    align-items: center;
+  }
+
+  .iaMascot {
+    width: clamp(88px, 28vw, 132px);
+  }
+
+  .imageCol {
+    overflow: visible;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .imageCol .imagePlaceholder {
+    margin-top: 0;
+  }
+
+  .itemList {
+    margin-bottom: 14px;
+  }
+
+  .blockTitle {
+    font-size: clamp(1.45rem, 6vw, 28px);
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ctaOutline:hover {
+    transform: none;
+  }
+}

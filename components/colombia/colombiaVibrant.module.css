@@ -1,0 +1,146 @@
+/* Tipografía vibrante Fluxa — púrpura + cian con glow (referencia neón) */
+
+.headlineHero {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.65rem, 6vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.headlineSm {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  text-align: center;
+  color: #ffffff;
+}
+
+.headlineBlock {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+.body {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 500;
+  line-height: 1.65;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.labelCaps {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a020f0;
+  text-shadow: 0 0 18px rgba(160, 32, 240, 0.45);
+}
+
+.accentPurple {
+  color: #c77dff;
+  text-shadow:
+    0 0 22px rgba(160, 32, 240, 0.65),
+    0 0 44px rgba(160, 32, 240, 0.35);
+}
+
+.accentCyan {
+  color: #00e0ff;
+  text-shadow:
+    0 0 20px rgba(0, 224, 255, 0.55),
+    0 0 40px rgba(0, 224, 255, 0.28);
+}
+
+/* Panel morado con spotlight (referencia bonus cards / vitrina) */
+.glowPanel {
+  position: relative;
+  overflow: visible;
+  background: linear-gradient(165deg, #1a0a28 0%, #100818 42%, #0a0a14 100%);
+  border: 1px solid rgba(160, 32, 240, 0.38);
+  box-shadow:
+    0 0 48px rgba(160, 32, 240, 0.18),
+    0 24px 48px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.glowPanel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 95% 75% at 50% -8%, rgba(160, 32, 240, 0.42), transparent 58%),
+    radial-gradient(ellipse 70% 55% at 50% 105%, rgba(0, 130, 255, 0.22), transparent 52%);
+}
+
+.glowPanel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glowSection {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(26, 10, 40, 0.92) 0%, rgba(10, 10, 20, 0.55) 100%);
+  border-top: 1px solid rgba(160, 32, 240, 0.28);
+  border-bottom: 1px solid rgba(160, 32, 240, 0.18);
+}
+
+.glowSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(160, 32, 240, 0.3), transparent 62%),
+    radial-gradient(ellipse 60% 40% at 100% 80%, rgba(0, 130, 255, 0.12), transparent 50%);
+}
+
+.glowCard {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1c0d2a 0%, #12081c 55%, #0e0a18 100%);
+  border: 1px solid rgba(160, 32, 240, 0.32);
+  border-radius: 16px;
+  box-shadow:
+    0 0 32px rgba(160, 32, 240, 0.12),
+    inset 0 0 40px rgba(160, 32, 240, 0.06);
+}
+
+.glowCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(160, 32, 240, 0.28), transparent 55%);
+}
+
+.glowCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accentPurple,
+  .accentCyan,
+  .labelCaps {
+    text-shadow: none;
+  }
+}
