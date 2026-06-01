@@ -1,0 +1,78 @@
+.section {
+  padding: 48px 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.h2 {
+  margin: 0 0 10px;
+  text-align: center;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+}
+
+.sub {
+  margin: 0 0 28px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 36em;
+  margin-inline: auto;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stepCard {
+  display: flex;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 12px;
+}
+
+.stepNum {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #fff;
+  background: linear-gradient(135deg, #a020f0, #0082ff);
+}
+
+.stepCard h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.stepCard p {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.stepCta {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #00e0ff;
+  text-decoration: none;
+}
+
+.stepCta:hover {
+  text-decoration: underline;
+}

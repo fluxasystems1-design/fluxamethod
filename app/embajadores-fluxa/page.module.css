@@ -1,0 +1,329 @@
+/* /embajadores-fluxa — paleta Fluxa (igual que /colombia) */
+.wrap {
+  --color-primary: #a020f0;
+  --color-secondary: #0082ff;
+  --color-accent: #00e0ff;
+  --color-bg: #0a0a14;
+  --color-text: #ffffff;
+  --gradient-brand: linear-gradient(135deg, #a020f0, #0082ff);
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  overflow-x: clip;
+  isolation: isolate;
+}
+
+.wrap :where(
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  span,
+  a,
+  button,
+  li,
+  dt,
+  dd,
+  label,
+  input,
+  select,
+  option,
+  th,
+  td,
+  strong,
+  small
+) {
+  font-family: inherit;
+}
+
+.wrap::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 85% 55% at 50% -5%, rgba(160, 32, 240, 0.22), transparent 58%),
+    radial-gradient(ellipse 70% 45% at 15% 30%, rgba(160, 32, 240, 0.12), transparent 52%),
+    radial-gradient(ellipse 60% 40% at 90% 70%, rgba(0, 130, 255, 0.14), transparent 50%);
+}
+
+.wrap > header,
+.wrap > main,
+.wrap > footer {
+  position: relative;
+  z-index: 1;
+}
+
+.wrap :global(h1),
+.wrap :global(h2),
+.wrap :global(h3) {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.wrap :global([id]) {
+  scroll-margin-top: 88px;
+}
+
+@media (min-width: 900px) {
+  .wrap :global([id]) {
+    scroll-margin-top: 76px;
+  }
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Header sticky + scroll-spy */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: rgba(10, 10, 20, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(160, 32, 240, 0.22);
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.headerScrolled {
+  background: rgba(10, 10, 20, 0.97);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(160, 32, 240, 0.4);
+  border-radius: 8px;
+  background: rgba(26, 10, 40, 0.6);
+  cursor: pointer;
+}
+
+.menuIcon {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  position: relative;
+  border-radius: 1px;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.menuIcon::before {
+  top: -6px;
+}
+
+.menuIcon::after {
+  top: 6px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.headerLogo {
+  display: flex;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.headerLogoImg {
+  max-height: 40px;
+  width: auto;
+  height: auto;
+}
+
+.headerCta {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--color-text);
+  background: var(--gradient-brand);
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.headerCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(160, 32, 240, 0.45);
+}
+
+.navChips {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 16px 16px;
+  max-height: min(70vh, 480px);
+  overflow-y: auto;
+}
+
+.navOpen {
+  display: flex;
+}
+
+.navChips::-webkit-scrollbar {
+  display: none;
+}
+
+.navChip {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  border: 1px solid rgba(160, 32, 240, 0.25);
+  border-radius: 999px;
+  background: rgba(26, 10, 40, 0.5);
+  color: rgba(255, 255, 255, 0.6);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.navChip:hover {
+  color: #fff;
+  border-color: rgba(160, 32, 240, 0.5);
+}
+
+.navChipActive {
+  color: #fff;
+  border-color: rgba(0, 224, 255, 0.55);
+  background: rgba(160, 32, 240, 0.2);
+  box-shadow: 0 0 16px rgba(160, 32, 240, 0.2);
+}
+
+.main {
+  padding-top: 108px;
+}
+
+@media (min-width: 900px) {
+  .headerTop {
+    padding: 12px 24px;
+  }
+
+  .menuBtn {
+    display: none;
+  }
+
+  .navChips {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    max-height: none;
+    overflow: visible;
+    padding: 0 12px 12px;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .navChip {
+    font-size: 0.78rem;
+    padding: 7px 14px;
+    flex: 0 0 auto;
+  }
+
+  .main {
+    padding-top: 118px;
+  }
+}
+
+/* Footer página */
+.pageFooter {
+  padding: 32px 20px 48px;
+  text-align: center;
+  border-top: 1px solid rgba(160, 32, 240, 0.25);
+  background: linear-gradient(180deg, rgba(26, 10, 40, 0.6) 0%, #0a0a14 100%);
+}
+
+.footerLogoImg {
+  display: block;
+  margin: 0 auto 16px;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  opacity: 0.95;
+}
+
+.footerConfidential {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #a020f0;
+  max-width: 28em;
+  margin-inline: auto;
+}
+
+.footerCopy {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headerCta,
+  .navChip {
+    transition: none;
+  }
+}

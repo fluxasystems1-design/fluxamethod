@@ -1,0 +1,40 @@
+.hero {
+  padding-bottom: 24px;
+}
+
+.content {
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+}
+
+.subtitle {
+  margin: 0 auto 16px;
+  max-width: 36em;
+  font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+  line-height: 1.65;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(160, 32, 240, 0.2);
+  border: 1px solid rgba(160, 32, 240, 0.45);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}

@@ -1,0 +1,144 @@
+.section {
+  padding: 40px 16px 48px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.5rem, 5vw, 2.1rem);
+}
+
+.sub {
+  margin: 0 0 28px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.flowGrid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+  .flowGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .flowGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.flowCard {
+  padding: 20px 16px;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.flowCard:hover {
+  border-color: rgba(160, 32, 240, 0.65);
+  box-shadow:
+    0 0 32px rgba(160, 32, 240, 0.22),
+    inset 0 0 40px rgba(160, 32, 240, 0.06);
+}
+
+.stepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #00e0ff;
+  background: rgba(0, 224, 255, 0.1);
+  border: 1px solid rgba(0, 224, 255, 0.35);
+}
+
+.flowCard h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.flowCard p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.ruleBlock {
+  margin: 0 0 32px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(160, 32, 240, 0.15) 0%, rgba(0, 130, 255, 0.08) 100%);
+  border: 1px solid rgba(160, 32, 240, 0.35);
+}
+
+.ruleBlock p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  font-weight: 700;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.roleTitle {
+  margin: 0 0 16px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.roleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 720px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roleList li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #111118;
+  border: 1px solid #1a1a24;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+  transition: border-color 0.2s ease;
+}
+
+.roleList li:hover {
+  border-color: rgba(160, 32, 240, 0.4);
+}
+
+.roleIndex {
+  flex-shrink: 0;
+  font-weight: 800;
+  color: #a020f0;
+  min-width: 1.25rem;
+}

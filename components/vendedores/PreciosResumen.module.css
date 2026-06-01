@@ -1,0 +1,125 @@
+.section {
+  padding: 48px 0;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.5rem, 4.5vw, 2rem);
+}
+
+.sub {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.92rem;
+  max-width: 32em;
+}
+
+.printBtn {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(160, 32, 240, 0.5);
+  background: rgba(160, 32, 240, 0.15);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.printBtn:hover {
+  background: rgba(160, 32, 240, 0.28);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 32, 240, 0.25);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(160, 32, 240, 0.15);
+}
+
+.table th {
+  background: rgba(26, 10, 40, 0.8);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.table tbody tr:hover {
+  background: rgba(160, 32, 240, 0.08);
+}
+
+@media (max-width: 720px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tr {
+    display: block;
+    padding: 12px;
+    border-bottom: 1px solid rgba(160, 32, 240, 0.2);
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border: none;
+    padding: 4px 0;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+@media print {
+  .printBtn {
+    display: none;
+  }
+
+  .section {
+    padding: 0;
+  }
+
+  .table {
+    font-size: 10pt;
+  }
+
+  .table th {
+    background: #eee;
+    color: #000;
+  }
+
+  .table td {
+    color: #000;
+  }
+}

@@ -12,10 +12,10 @@ function WhatsAppIcon() {
   );
 }
 
-export default function ColombiaWhatsAppFloat({ className = '' }) {
+export default function ColombiaWhatsAppFloat({ className = '', href = COLOMBIA_WA_HREF }) {
   return (
     <a
-      href={COLOMBIA_WA_HREF}
+      href={href}
       className={`${styles.float} ${className}`.trim()}
       target="_blank"
       rel="noopener noreferrer"
