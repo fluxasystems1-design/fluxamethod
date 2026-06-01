@@ -589,7 +589,6 @@ export const PAQUETES = {
         entrega: '2–4 semanas',
         includes: [
           'Landing page hasta 4 productos — planes, señales o comunidad con CTA',
-          'Bot de señales en tiempo real — envía alertas automáticas por WhatsApp o Telegram cuando se activa una señal',
           'Bot WhatsApp — respuestas automáticas, onboarding y soporte a miembros',
           'Sistema de membresía o cursos — acceso exclusivo por suscripción mensual',
           'Embudos de nutrición automatizados — secuencia de mensajes para convertir prospectos en miembros',
