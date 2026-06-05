@@ -17,13 +17,8 @@
     0 0 0 1px rgba(255, 255, 255, 0.12);
   transition:
     transform 0.2s ease,
-    box-shadow 0.2s ease,
-    bottom 0.25s ease;
+    box-shadow 0.2s ease;
   animation: tr-wa-pulse 2.5s ease-in-out infinite;
-}
-
-.aboveSticky {
-  bottom: calc(78px + env(safe-area-inset-bottom, 0px));
 }
 
 .float:hover,
@@ -85,10 +80,6 @@
     bottom: 24px;
     width: 60px;
     height: 60px;
-  }
-
-  .aboveSticky {
-    bottom: 24px;
   }
 
   .icon {

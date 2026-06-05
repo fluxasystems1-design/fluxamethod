@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { trackTradingCta } from '@/lib/trading/analytics';
 import { TRADING_WA_DISPLAY, tradingWaHref } from '@/lib/trading/whatsapp';
 import styles from './TradingWhatsAppFloat.module.css';
@@ -17,21 +16,10 @@ function WhatsAppIcon() {
 }
 
 export default function TradingWhatsAppFloat({ href = tradingWaHref('default') }) {
-  const [aboveSticky, setAboveSticky] = useState(false);
-
-  useEffect(() => {
-    function onScroll() {
-      setAboveSticky(window.scrollY > 480);
-    }
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <a
       href={href}
-      className={`${styles.float} ${aboveSticky ? styles.aboveSticky : ''}`.trim()}
+      className={styles.float}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`Escribir por WhatsApp al ${TRADING_WA_DISPLAY}`}

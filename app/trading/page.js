@@ -5,7 +5,6 @@ import Link from 'next/link';
 import typeStyles from './tradingType.module.css';
 import TradingHeader from '@/components/trading/TradingHeader';
 import TradingHeadline from '@/components/trading/TradingHeadline';
-import TradingStickyCta from '@/components/trading/TradingStickyCta';
 import TradingWhatsAppFloat from '@/components/trading/TradingWhatsAppFloat';
 import TradingIconCardGrid from '@/components/trading/TradingIconCardGrid';
 import TradingPhaseTimeline from '@/components/trading/TradingPhaseTimeline';
@@ -70,7 +69,6 @@ export default function TradingPage() {
   return (
     <div className={styles.wrap}>
       <TradingHeader waHref={TRADING_WA.href} />
-      <TradingStickyCta href={TRADING_WA.href} label={HERO.ctaPrimary} />
 
       <section className={styles.hero} data-reveal id="inicio">
         <div className={styles.heroGlow} aria-hidden />
