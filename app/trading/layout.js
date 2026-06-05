@@ -23,22 +23,14 @@ export const metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_CO',
+    url: '/trading',
     title,
     description,
-    images: [
-      {
-        url: '/trading/imagen1trading.png',
-        width: 1024,
-        height: 1024,
-        alt: 'Sistema digital para traders — Fluxa Method',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title,
     description,
-    images: ['/trading/imagen1trading.png'],
   },
 };
 

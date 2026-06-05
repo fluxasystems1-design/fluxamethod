@@ -409,10 +409,6 @@ export const TECNOLOGIA = {
     {
       title: 'Pagos & suscripciones',
       icon: '💳',
-      image: {
-        src: '/trading/bitcoin-pagos.png',
-        alt: 'Pagos y suscripciones — checkout y cobros recurrentes para traders',
-      },
       pills: [
         {
           name: 'Checkout propio',

@@ -3,7 +3,11 @@
 .wrap {
   --purple: #8f7ac8;
   --purple-strong: #6d28d9;
-  --purple-glow: rgba(109, 40, 217, 0.38);
+  --purple-glow: rgba(109, 40, 217, 0.45);
+  --purple-text-glow:
+    0 0 8px rgba(196, 181, 253, 0.55),
+    0 0 18px rgba(139, 92, 246, 0.4),
+    0 0 32px rgba(109, 40, 217, 0.22);
   --purple-rgb: 109, 40, 217;
   --green: #22c55e;
   --green-neon: #00ff88;
@@ -240,6 +244,7 @@
   color: var(--purple);
   background: rgba(var(--purple-rgb), 0.1);
   border-color: rgba(var(--purple-rgb), 0.35);
+  text-shadow: var(--purple-text-glow);
   animation-delay: 0.6s;
 }
 
@@ -492,6 +497,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--purple);
+  text-shadow: var(--purple-text-glow);
 }
 
 .eyebrowGreen {
@@ -669,6 +675,7 @@
   color: var(--purple);
   background: transparent;
   border: 2px solid rgba(var(--purple-rgb), 0.45);
+  text-shadow: var(--purple-text-glow);
   transition: background 0.2s ease;
 }
 
@@ -713,6 +720,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--purple);
+  text-shadow: var(--purple-text-glow);
 }
 
 .section {
@@ -855,6 +863,7 @@
 
 .idealCardNo .idealCardTitle {
   color: var(--purple);
+  text-shadow: var(--purple-text-glow);
 }
 
 .idealList {
@@ -1038,9 +1047,10 @@
 }
 
 .compareVisualTop .sectionVisualImg {
-  width: 100%;
+  width: 92%;
+  margin: 0 auto;
   height: auto;
-  max-height: min(64vw, 300px);
+  max-height: min(58vw, 270px);
   object-fit: contain;
   object-position: top center;
   border-radius: 0;
@@ -1049,7 +1059,7 @@
 
 @media (min-width: 640px) {
   .compareVisualTop .sectionVisualImg {
-    max-height: 355px;
+    max-height: 320px;
   }
 }
 
@@ -1061,7 +1071,8 @@
   }
 
   .compareVisualTop .sectionVisualImg {
-    max-height: 390px;
+    width: 88%;
+    max-height: 350px;
   }
 }
 
@@ -1090,39 +1101,49 @@
 }
 
 .ctaVisual {
-  margin: -2px auto 0;
+  margin: -6px auto -18px;
   max-width: 100%;
   width: 100%;
+  line-height: 0;
+  overflow: visible;
 }
 
 .ctaVisual .sectionVisualImg {
-  width: 100%;
+  width: calc(100% / 1.35);
   max-height: none;
-  min-height: min(62vw, 300px);
+  min-height: 0;
+  margin: 0 auto -10%;
   object-fit: contain;
   object-position: center center;
   transform: scale(1.35);
   transform-origin: center center;
+  clip-path: inset(14% 0 10% 0);
+  display: block;
 }
 
 @media (min-width: 640px) {
   .ctaVisual {
-    margin: 0 auto 2px;
+    margin: -4px auto -14px;
     max-width: min(920px, 100%);
   }
 
   .ctaVisual .sectionVisualImg {
-    min-height: 0;
+    width: calc(100% / 1.12);
     max-height: 580px;
     transform: scale(1.12);
+    margin-bottom: -8%;
+    clip-path: inset(10% 0 8% 0);
     object-position: top center;
   }
 }
 
 @media (min-width: 1024px) {
   .ctaVisual .sectionVisualImg {
+    width: calc(100% / 1.05);
     max-height: 640px;
     transform: scale(1.05);
+    margin-bottom: -6%;
+    clip-path: inset(8% 0 6% 0);
   }
 }
 
@@ -1185,7 +1206,7 @@
   font-weight: 700;
   color: var(--purple);
   line-height: 1.5;
-  text-shadow: 0 0 20px var(--purple-glow);
+  text-shadow: var(--purple-text-glow);
 }
 
 .painBlock {
@@ -1263,7 +1284,7 @@
   color: var(--purple);
   background: rgba(var(--purple-rgb), 0.08);
   border: 1px solid rgba(var(--purple-rgb), 0.3);
-  text-shadow: 0 0 16px var(--purple-glow);
+  text-shadow: var(--purple-text-glow);
 }
 
 @media (min-width: 900px) {
@@ -1541,9 +1562,14 @@
 }
 
 /* Paquetes */
+#paquetes .container > h2 {
+  margin-bottom: 10px;
+}
+
 .plansGrid {
   display: grid;
-  gap: 14px;
+  gap: 22px;
+  margin-top: 16px;
   text-align: left;
 }
 
@@ -1556,7 +1582,8 @@
 
 .planCard {
   position: relative;
-  padding: 28px 20px 22px;
+  padding: 34px 20px 22px;
+  margin-top: 6px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   background: var(--surface2);
@@ -1577,7 +1604,9 @@
   position: absolute;
   top: -12px;
   left: 50%;
+  z-index: 2;
   transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .planName {
@@ -1982,7 +2011,7 @@
 
 /* CTA final */
 .ctaFinal {
-  padding: 14px 16px 22px;
+  padding: 2px 16px 10px;
   text-align: center;
   background:
     radial-gradient(ellipse at 50% 100%, rgba(var(--purple-rgb), 0.12), transparent 60%),
@@ -1992,23 +2021,24 @@
 }
 
 .ctaFinal .sectionLabel {
-  margin-bottom: 2px;
+  margin: 0 0 -2px;
 }
 
 .ctaFinal .container > h2 {
-  margin-bottom: 0;
+  margin: 0 0 -6px;
+  line-height: 1.06;
 }
 
 .ctaFinalSub {
-  margin: -6px auto 8px;
+  margin: -18px auto 6px;
   max-width: 36em;
   font-size: 0.95rem;
-  line-height: 1.65;
+  line-height: 1.55;
   color: var(--muted);
 }
 
 .ctaFinalLead {
-  margin: 0 auto 12px;
+  margin: 0 auto 6px;
   max-width: 32em;
   font-weight: 600;
   font-size: 1rem;
