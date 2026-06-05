@@ -1,0 +1,109 @@
+.float {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #ffffff;
+  text-decoration: none;
+  box-shadow:
+    0 6px 24px rgba(37, 211, 102, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    bottom 0.25s ease;
+  animation: tr-wa-pulse 2.5s ease-in-out infinite;
+}
+
+.aboveSticky {
+  bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+}
+
+.float:hover,
+.float:focus-visible {
+  transform: scale(1.06);
+  box-shadow:
+    0 10px 32px rgba(37, 211, 102, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+}
+
+.tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(6px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.float:hover .tooltip,
+.float:focus-visible .tooltip {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes tr-wa-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 6px 24px rgba(37, 211, 102, 0.45),
+      0 0 0 0 rgba(37, 211, 102, 0.35);
+  }
+
+  50% {
+    box-shadow:
+      0 8px 28px rgba(37, 211, 102, 0.5),
+      0 0 0 10px rgba(37, 211, 102, 0);
+  }
+}
+
+@media (min-width: 768px) {
+  .float {
+    right: 24px;
+    bottom: 24px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .aboveSticky {
+    bottom: 24px;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float {
+    animation: none;
+    transition: none;
+  }
+
+  .tooltip {
+    transition: none;
+  }
+}

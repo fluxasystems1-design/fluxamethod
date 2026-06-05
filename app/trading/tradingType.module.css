@@ -1,0 +1,84 @@
+/* Tipografía trading — Poppins + acentos Easy Creator */
+
+.headlineHero {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 8.5vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.headlineSm {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.45rem, 4.8vw, 2.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-align: center;
+  color: #ffffff;
+}
+
+.body {
+  font-family: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  font-size: clamp(0.92rem, 2.6vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.55;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.accentPurple {
+  color: #8f7ac8;
+  text-shadow:
+    0 0 16px rgba(109, 40, 217, 0.35),
+    0 0 32px rgba(109, 40, 217, 0.18);
+  animation: tr-accent-pulse 4s ease-in-out infinite;
+}
+
+.accentGreen {
+  color: #00ff88;
+  text-shadow:
+    0 0 18px rgba(0, 255, 136, 0.5),
+    0 0 36px rgba(0, 255, 136, 0.22);
+  animation: tr-accent-pulse-green 4s ease-in-out infinite;
+}
+
+@keyframes tr-accent-pulse {
+  0%,
+  100% {
+    text-shadow:
+      0 0 16px rgba(109, 40, 217, 0.35),
+      0 0 32px rgba(109, 40, 217, 0.18);
+  }
+
+  50% {
+    text-shadow:
+      0 0 22px rgba(109, 40, 217, 0.5),
+      0 0 44px rgba(109, 40, 217, 0.28);
+  }
+}
+
+@keyframes tr-accent-pulse-green {
+  0%,
+  100% {
+    text-shadow:
+      0 0 18px rgba(0, 255, 136, 0.5),
+      0 0 36px rgba(0, 255, 136, 0.22);
+  }
+
+  50% {
+    text-shadow:
+      0 0 26px rgba(0, 255, 136, 0.65),
+      0 0 48px rgba(0, 255, 136, 0.32);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accentPurple,
+  .accentGreen {
+    text-shadow: none;
+    animation: none;
+  }
+}
